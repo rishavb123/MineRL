@@ -116,8 +116,11 @@
          </AgentStart>
          <AgentHandlers>
             <DiscreteMovementCommands>
-               <ModifierList type="deny-list">
+               <ModifierList type="allow-list">
+                  <command>move</command>
+                  <command>turn</command>
                   <command>attack</command>
+                  <command>use</command>
                </ModifierList>
             </DiscreteMovementCommands>
             <ObservationFromNearbyEntities>
