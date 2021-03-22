@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
     if len(args.load_model) > 0:
         agent.load_model(args.load_model)
-
+        
     if args.save_image_steps > 0:
         os.mkdir(f"images/{stamp}")
 
