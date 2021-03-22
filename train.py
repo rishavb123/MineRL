@@ -89,12 +89,12 @@ if __name__ == "__main__":
     model_file = f"models/{env_name}_{stamp}.h5" if args.save_model == "" else args.save_model
     h, w, d = env.observation_space.shape
     input_shape = (224, 224, 3) if args.baseline else (h, w, d)
-    model = make_baseline_model((h, w, d)) if args.baseline else make_model(input_shape)
+    model = make_baseline_model((h, w, d), env.action_space.n) if args.baseline else make_model(input_shape, env.action_space.n)
     print(model.summary())
     agent = Agent(
         alpha=0.0005,
         gamma=0.99,
-        num_actions=len(env.action_space),
+        num_actions=env.action_space.n,
         batch_size=16,
         epsilon=1,
         input_shape=input_shape,

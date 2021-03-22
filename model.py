@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-def make_model(input_shape):
+def make_model(input_shape, n):
     model = tf.keras.models.Sequential()
 
     model.add(
@@ -24,13 +24,13 @@ def make_model(input_shape):
     # assert model.output_shape == (None, 15*11*128)
 
     model.add(tf.keras.layers.Dense(1000))
-    model.add(tf.keras.layers.Dense(6))
-    # assert model.output_shape == (None, 6)
+    model.add(tf.keras.layers.Dense(n))
+    # assert model.output_shape == (None, n)
 
     return model
 
 
-def make_baseline_model(input_shape):
+def make_baseline_model(input_shape, n):
     model = tf.keras.models.Sequential()
 
     resnet50 = tf.keras.applications.ResNet50(
@@ -40,6 +40,6 @@ def make_baseline_model(input_shape):
     model.add(resnet50)
 
     model.add(tf.keras.layers.Dense(1000))
-    model.add(tf.keras.layers.Dense(6))
+    model.add(tf.keras.layers.Dense(n))
 
     return model
