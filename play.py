@@ -106,8 +106,6 @@ if __name__ == "__main__":
     if args.save_image_steps > 0:
         os.mkdir(f"images/{stamp}")
 
-    scores = []
-
     def process_state(state):
         state = state.reshape(h, w, d)
         if args.baseline:
@@ -132,22 +130,14 @@ if __name__ == "__main__":
             score += reward
             time_elapsed = time.time() - start_time
 
-            print(f"Step {steps}, Reward {reward}, Done {done}, Score {score} Time Elapsed {int(time_elapsed)}s" + " "*10, end="\r")
+            print(f"Step {steps}, Reward {reward}, Done {done}, Score {score}, Time Elapsed {int(time_elapsed)}s" + " "*10, end="\r")
 
             if args.save_image_steps > 0 and steps % args.save_image_steps == 0:
                 img = Image.fromarray(state.reshape(h, w, d))
                 img.save(f"images/{stamp}/ep_{ep}_step_{steps}.png")
     
 
-        scores.append(score)
-        avg_score = np.mean(scores[max(0, ep - 100): ep + 1])
-        print(f"Episode {ep + 1} Score {score} Average Score {avg_score} Episode Time {int(time_elapsed)}s" + " " * 10)
+        print(f"Episode {ep + 1} Score {score} Episode Time {int(time_elapsed)}s" + " " * 10)
 
 
     env.close()
-
-    plt.plot(scores, label="Scores Over Episodes")
-    plt.plot(savgol_filter(scores, args.episodes / 2, 4), label="Savgol Filter Smoothing")
-    plt.legend()
-    plt.savefig("./graphs/" + agent.model_file.split("/")[1][:-3] + "-scores.png")
-    plt.show()
