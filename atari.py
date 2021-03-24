@@ -176,5 +176,5 @@ if __name__ == "__main__":
         savgol_filter(scores, args.episodes / 2, 4), label="Savgol Filter Smoothing"
     )
     plt.legend()
-    plt.savefig("./graphs/" + agent.model_file.split("/")[1][:-3] + "-scores.png")
+    plt.savefig("./graphs/atari/" + env_name + "-scores.png")
     plt.show()
