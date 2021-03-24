@@ -20,7 +20,7 @@ def make_parser():
         "-e",
         "--env",
         type=str,
-        default="envs/mobchase_single_agent.xml",
+        default="envs/eating.xml",
         help="the mission xml",
     )
     parser.add_argument(
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         agent.load_model(args.load_model)
         
     if args.save_image_steps > 0:
-        os.mkdir(f"images/{stamp}")
+        os.mkdir(f"images/{env_name}_{stamp}")
 
     scores = []
 
@@ -157,7 +157,7 @@ if __name__ == "__main__":
 
             if args.save_image_steps > 0 and steps % args.save_image_steps == 0:
                 img = Image.fromarray(state.reshape(h, w, d))
-                img.save(f"images/{stamp}/ep_{ep}_step_{steps}.png")
+                img.save(f"images/{env_name}_{stamp}/ep_{ep}_step_{steps}.png")
     
 
         scores.append(score)
