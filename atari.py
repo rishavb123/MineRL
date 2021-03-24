@@ -3,8 +3,8 @@ from agent import Agent
 from savgol_filter import savgol_filter
 
 import gym
+import atexit
 import argparse
-from pathlib import Path
 import time
 from PIL import Image
 import os
@@ -80,7 +80,6 @@ def make_parser():
 
     return parser
 
-
 if __name__ == "__main__":
 
     parser = make_parser()
@@ -124,6 +123,16 @@ if __name__ == "__main__":
         if args.baseline:
             state = tf.image.resize(state, (224, 224))
         return state
+
+    def onexit():
+        plt.plot(scores, label="Scores Over Episodes")
+        plt.plot(
+            savgol_filter(scores, args.episodes / 2, 4), label="Savgol Filter Smoothing"
+        )
+        plt.legend()
+        plt.savefig("./graphs/atari/" + env_name + "-scores.png")
+
+    atexit.register(onexit)
 
     for ep in range(args.episodes):
         done = False
@@ -170,11 +179,3 @@ if __name__ == "__main__":
 
     agent.save_model()
     env.close()
-
-    plt.plot(scores, label="Scores Over Episodes")
-    plt.plot(
-        savgol_filter(scores, args.episodes / 2, 4), label="Savgol Filter Smoothing"
-    )
-    plt.legend()
-    plt.savefig("./graphs/atari/" + env_name + "-scores.png")
-    plt.show()

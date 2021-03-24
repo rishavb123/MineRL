@@ -1,3 +1,4 @@
+import atexit
 from model import make_model, make_baseline_model
 from agent import Agent
 from savgol_filter import savgol_filter
@@ -118,6 +119,14 @@ if __name__ == "__main__":
             state = tf.image.resize(state, (224, 224))
         return state
 
+    def onexit():
+        plt.plot(scores, label="Scores Over Episodes")
+        plt.plot(savgol_filter(scores, args.episodes / 2, 4), label="Savgol Filter Smoothing")
+        plt.legend()
+        plt.savefig("./graphs/" + agent.model_file.split("/")[1][:-3] + "-scores.png")
+
+    atexit.register(onexit)
+
     for ep in range(args.episodes):
         done = False
         state = process_state(env.reset())
@@ -155,9 +164,3 @@ if __name__ == "__main__":
 
     agent.save_model()
     env.close()
-
-    plt.plot(scores, label="Scores Over Episodes")
-    plt.plot(savgol_filter(scores, args.episodes / 2, 4), label="Savgol Filter Smoothing")
-    plt.legend()
-    plt.savefig("./graphs/" + agent.model_file.split("/")[1][:-3] + "-scores.png")
-    plt.show()
