@@ -23,7 +23,8 @@ def make_model(input_shape, n):
     model.add(tf.keras.layers.Flatten())
     # assert model.output_shape == (None, 15*11*128)
 
-    model.add(tf.keras.layers.Dense(1000))
+    model.add(tf.keras.layers.Dense(1000), activation='relu')
+    model.add(tf.keras.layers.Dense(500), activation='relu')
     model.add(tf.keras.layers.Dense(n))
     # assert model.output_shape == (None, n)
 
@@ -39,7 +40,8 @@ def make_baseline_model(input_shape, n):
     resnet50.trainable = False
     model.add(resnet50)
 
-    model.add(tf.keras.layers.Dense(1000))
+    model.add(tf.keras.layers.Dense(1000), activation='relu')
+    model.add(tf.keras.layers.Dense(500), activation='relu')
     model.add(tf.keras.layers.Dense(n))
 
     return model
