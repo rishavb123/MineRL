@@ -125,12 +125,16 @@ if __name__ == "__main__":
         return state
 
     def onexit():
-        plt.plot(scores, label="Scores Over Episodes")
-        plt.plot(
-            savgol_filter(scores, args.episodes / 2, 4), label="Savgol Filter Smoothing"
-        )
-        plt.legend()
-        plt.savefig("./graphs/atari/" + env_name + "-scores.png")
+        if len(scores) >= 5:
+            try:
+                plt.plot(scores, label="Scores Over Episodes")
+                plt.plot(
+                    savgol_filter(scores, args.episodes / 2, 4), label="Savgol Filter Smoothing"
+                )
+                plt.legend()
+                plt.savefig("./graphs/atari/" + env_name + "-scores.png")
+            except KeyboardInterrupt:
+                onexit()
 
     atexit.register(onexit)
 
