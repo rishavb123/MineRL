@@ -3,7 +3,7 @@
          <Summary>Test XML</Summary>
       </About>
       <ModSettings>
-         <MsPerTick>5</MsPerTick>
+         <MsPerTick>15</MsPerTick>
       </ModSettings>
       <ServerSection>
          <ServerInitialConditions>
@@ -71,10 +71,6 @@
             <RewardForDamagingEntity>
                <Mob reward="50" type="Zombie"/>
             </RewardForDamagingEntity>
-            <AgentQuitFromReachingCommandQuota description="command_quota_reached" total="50" />
-            <AgentQuitFromTouchingBlockType>
-               <Block description="Agent0_defaulted" type="bone_block" />
-            </AgentQuitFromTouchingBlockType>
             <VideoProducer want_depth="false">
                <Width>800</Width>
                <Height>600</Height>
