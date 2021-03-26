@@ -19,7 +19,7 @@ class Agent:
         epsilon_decay=0.999,
         epsilon_min=0.01,
         copy_period=300,
-        mem_size=100,
+        mem_size=200,
     ):
         self.action_space = np.arange(num_actions)
         self.gamma = gamma
