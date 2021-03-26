@@ -27,7 +27,7 @@
                <!-- Mobs -->
                <DrawEntity type="Zombie" x="6.5" y="4" z="8.5" />
             </DrawingDecorator>
-            <ServerQuitFromTimeUp description="out_of_time" timeLimitMs="1000000" />
+            <ServerQuitFromTimeUp description="out_of_time" timeLimitMs="100000" />
             <ServerQuitWhenAnyAgentFinishes />
          </ServerHandlers>
       </ServerSection>
