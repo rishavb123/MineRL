@@ -74,7 +74,7 @@
                <Height>600</Height>
             </VideoProducer>
             <RewardForMissionEnd rewardForDeath="-1000">
-               <Reward description="out_of_time" reward="-900"/>
+               <Reward description="out_of_time" reward="-700"/>
                <Reward description="out_of_arena" reward="100"/>
                <Reward description="drowned" reward="-800"/>
                <Reward description="found_goal" reward="400"/>
