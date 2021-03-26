@@ -3,7 +3,7 @@
          <Summary>Test XML</Summary>
       </About>
       <ModSettings>
-         <MsPerTick>5</MsPerTick>
+         <MsPerTick>15</MsPerTick>
       </ModSettings>
       <ServerSection>
          <ServerInitialConditions>
