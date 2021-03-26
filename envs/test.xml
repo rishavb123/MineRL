@@ -46,6 +46,15 @@
          <AgentHandlers>
             <TurnBasedCommands requestedPosition="1">
                <DiscreteMovementCommands>
+                  <ModifierList type="deny-list"> 
+                     <command>attack</command> 
+                  </ModifierList>
+               </DiscreteMovementCommands>
+               <ContinuousMovementCommands>
+                  <ModifierList type="allow-list"> 
+                     <command>attack</command> 
+                  </ModifierList> 
+               </ContinuousMovementCommands>
                </DiscreteMovementCommands>
             </TurnBasedCommands>
             <ObservationFromNearbyEntities>
