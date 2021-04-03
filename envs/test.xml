@@ -64,7 +64,7 @@
                </Grid>
             </ObservationFromGrid>
             <ObservationFromFullStats />
-            <RewardForSendingCommand reward="-0.02" />
+            <RewardForSendingCommand reward="1" />
             <RewardForTouchingBlockType>
                <Block behaviour="onceOnly" reward="0.2" type="bone_block" />
             </RewardForTouchingBlockType>
