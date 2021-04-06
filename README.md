@@ -9,8 +9,8 @@ Minecraft is a popular sandbox video game that contains a number of hostile non-
 ## Problem Definition
 
 The agent will have to last as long as possible while defeating as many distinct hostile entities as possible and navigating the environment. The agent will receive positive rewards for defeating entities/surviving and negative rewards for being defeated or losing health itself. We would ideally like to define a dense reward system, but if this does not prove to be possible, we will stick with a sparse reward system, such as death equating to a large negative reward.  Currently, we are using a dense reward system when it comes to fighting the mobs, since the agent is rewarded every time it damages a zombie. However, we are still using a sparse reward system for survival since we haven’t figured out how to create a direct reward for the agent losing health, although this is something we would like to implement in the future. Below are listed the present actions and rewards we used to train our preliminary RL model:
-*Action Space: Move Forward, Move Backward, Attack (i.e. destroy block, NOT attack entity which was a mistake), Turn Left, Turn Right, Use
-*Rewards: Death (-1000), Damaging Zombie (50), Surviving for one frame (1)
+* Action Space: Move Forward, Move Backward, Attack (i.e. destroy block, NOT attack entity which was a mistake), Turn Left, Turn Right, Use
+* Rewards: Death (-1000), Damaging Zombie (50), Surviving for one frame (1)
 
 ## Data Collection
 Since we are using Deep Q Learning, we did not have to collect any data. The agent’s observations in the environment was our “data,” on which the neural network trained on. While the agent was training, we also saved a subset of these observations/images for future use. These images could be useful in training our autoencoder in the future.
