@@ -1,6 +1,6 @@
 <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" SchemaVersion="">
       <About>
-         <Summary>Test XML</Summary>
+         <Summary>Fighting XML</Summary>
       </About>
       <ModSettings>
          <MsPerTick>15</MsPerTick>
@@ -8,11 +8,12 @@
       <ServerSection>
          <ServerInitialConditions>
             <Time>
-               <StartTime>1200</StartTime>
-               <AllowPassageOfTime>false</AllowPassageOfTime>
+               <StartTime>1000</StartTime>
+               <AllowPassageOfTime>true</AllowPassageOfTime>
             </Time>
             <Weather>clear</Weather>
-            <AllowSpawning>false</AllowSpawning>
+            <AllowSpawning>true</AllowSpawning>
+            <AllowedMobs>Sheep</AllowedMobs>
          </ServerInitialConditions>
          <ServerHandlers>
             <FlatWorldGenerator generatorString="3;minecraft:bedrock,2*minecraft:dirt,minecraft:grass;1;village" forceReset="true" />
@@ -23,9 +24,11 @@
                " z1="-17" z2="18" />
                <DrawCuboid type="air" x1="-14" x2="15" y1="4" y2="39" z1="-14" z2="15" />
                <DrawCuboid type="glowstone" x1="-14" x2="15" y1="8" y2="8" z1="-14" z2="15" />
-               <DrawBlock type="bone_block" x="-10" y="3" z="-10" />
+               <!-- <DrawBlock type="grass" x="-10" y="3" z="-10" /> -->
                <!-- Mobs -->
                <DrawEntity type="Zombie" x="6.5" y="4" z="8.5" />
+               <DrawEntity type="Zombie" x="6.5" y="4" z="1.5" />
+               <DrawBlock type="mob_spawner" variant="Sheep" x="-10" y="4" z="-10" />
             </DrawingDecorator>
             <ServerQuitFromTimeUp description="out_of_time" timeLimitMs="1000000" />
             <ServerQuitWhenAnyAgentFinishes />
@@ -36,7 +39,7 @@
          <AgentStart>
             <Placement pitch="30" x="5.5" y="4" yaw="90" z="5.5" />
             <Inventory>
-               <InventoryBlock quantity="1" slot="0" type="iron_sword" />
+               <InventoryBlock quantity="1" slot="0" type="diamond_sword" />
                <InventoryBlock quantity="1" slot="39" type="iron_helmet" />
                <InventoryBlock quantity="1" slot="38" type="iron_chestplate" />
                <InventoryBlock quantity="1" slot="37" type="iron_leggings" />
@@ -47,13 +50,15 @@
             <DiscreteMovementCommands>
                <ModifierList type="deny-list"> 
                   <command>attack</command> 
+                  <!-- <command>turn</command> -->
                </ModifierList>
             </DiscreteMovementCommands>
-            <ContinuousMovementCommands>
+            <!-- <ContinuousMovementCommands turnSpeedDegs="360">
                <ModifierList type="allow-list"> 
                   <command>attack</command> 
+                  <command>turn</command>
                </ModifierList> 
-            </ContinuousMovementCommands>
+            </ContinuousMovementCommands> -->
             <ObservationFromNearbyEntities>
                <Range name="entities" xrange="8" yrange="2" zrange="6" />
             </ObservationFromNearbyEntities>
