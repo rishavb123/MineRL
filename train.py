@@ -20,7 +20,7 @@ def make_parser():
         "-e",
         "--env",
         type=str,
-        default="envs/eating.xml",
+        default="envs/zombie_fight.xml",
         help="the mission xml",
     )
     parser.add_argument(
@@ -66,6 +66,9 @@ def make_parser():
     parser.add_argument(
         "-b", "--baseline", type=str2bool, default=False, help="Whether or not to use the baseline model."
     )
+    parser.add_argument(
+        "-ds", "--dont-save", type=str2bool, default=False, help="Whether or not to save the model."
+    )
 
     return parser
 
@@ -83,6 +86,7 @@ if __name__ == "__main__":
         port2=args.port,
         role=0,
         episode=0,
+        action_filter=None
     )
 
     env_name = args.env.split("/")[1].split(".")[0]
@@ -164,7 +168,8 @@ if __name__ == "__main__":
         avg_score = np.mean(scores[max(0, ep - 100): ep + 1])
         print(f"Episode {ep + 1} Score {score} Average Score {avg_score} Episode Time {int(time_elapsed)}s" + " " * 10)
 
+        if not args.dont_save:
+            agent.save_model()
+    if not args.dont_save:
         agent.save_model()
-
-    agent.save_model()
     env.close()
