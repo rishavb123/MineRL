@@ -175,7 +175,7 @@ if __name__ == "__main__":
         return state
 
     def onexit():
-        if len(scores) >= 5:
+        if len(scores) >= 5 and not args.dont_save:
             try:
                 plt.plot(scores, label="Scores Over Episodes")
                 plt.plot(
