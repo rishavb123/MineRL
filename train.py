@@ -6,13 +6,13 @@ from savgol_filter import savgol_filter
 import malmoenv
 import argparse
 from pathlib import Path
-import time
 from PIL import Image
 import os
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 import time
+
 
 def make_parser():
     parser = argparse.ArgumentParser()
@@ -41,17 +41,33 @@ def make_parser():
         help="the number of resets to perform - default is 100",
     )
     parser.add_argument(
-        "-ms", "--episode-max-steps", type=int, default=0, help="max number of steps per episode"
+        "-ms",
+        "--episode-max-steps",
+        type=int,
+        default=0,
+        help="max number of steps per episode",
     )
     parser.add_argument(
-        "-si", "--save-image-steps", type=int, default=0, help="save an image every N steps"
+        "-si",
+        "--save-image-steps",
+        type=int,
+        default=0,
+        help="save an image every N steps",
     )
 
     parser.add_argument(
-        "-lm", "--load-model", type=str, default="", help="the file to load the model from before training"
+        "-lm",
+        "--load-model",
+        type=str,
+        default="",
+        help="the file to load the model from before training",
     )
     parser.add_argument(
-        "-sm", "--save-model", type=str, default="", help="the file to save the model from after training"
+        "-sm",
+        "--save-model",
+        type=str,
+        default="",
+        help="the file to save the model from after training",
     )
 
     def str2bool(v):
@@ -63,14 +79,24 @@ def make_parser():
             return False
         else:
             raise argparse.ArgumentTypeError("Boolean value expected.")
+
     parser.add_argument(
-        "-b", "--baseline", type=str2bool, default=False, help="Whether or not to use the baseline model."
+        "-b",
+        "--baseline",
+        type=str2bool,
+        default=False,
+        help="Whether or not to use the baseline model.",
     )
     parser.add_argument(
-        "-ds", "--dont-save", type=str2bool, default=False, help="Whether or not to save the model."
+        "-ds",
+        "--dont-save",
+        type=str2bool,
+        default=False,
+        help="Whether or not to save the model.",
     )
 
     return parser
+
 
 if __name__ == "__main__":
 
@@ -86,15 +112,40 @@ if __name__ == "__main__":
         port2=args.port,
         role=0,
         episode=0,
-        action_filter=None
+        action_filter={
+            "move",
+            # "jumpmove",
+            "strafe",
+            # "jumpstrafe",
+            "turn",
+            # "movenorth",
+            # "moveeast",
+            # "movesouth",
+            # "movewest",
+            # "jumpnorth",
+            # "jumpeast",
+            # "jumpsouth",
+            # "jumpwest",
+            # "jump",
+            # "look",
+            # "attack",
+            # "use",
+            # "jumpuse",
+        },
     )
 
     env_name = args.env.split("/")[1].split(".")[0]
     stamp = int(time.time())
-    model_file = f"models/{env_name}_{stamp}.h5" if args.save_model == "" else args.save_model
+    model_file = (
+        f"models/{env_name}_{stamp}.h5" if args.save_model == "" else args.save_model
+    )
     h, w, d = env.observation_space.shape
     input_shape = (224, 224, 3) if args.baseline else (h, w, d)
-    model = make_baseline_model((h, w, d), env.action_space.n) if args.baseline else make_model(input_shape, env.action_space.n)
+    model = (
+        make_baseline_model((h, w, d), env.action_space.n)
+        if args.baseline
+        else make_model(input_shape, env.action_space.n)
+    )
     print(model.summary())
     agent = Agent(
         alpha=0.0005,
@@ -106,12 +157,12 @@ if __name__ == "__main__":
         model=model,
         model_file=model_file,
         epsilon_decay=0.999,
-        epsilon_min=0.01
+        epsilon_min=0.01,
     )
 
     if len(args.load_model) > 0:
         agent.load_model(args.load_model)
-        
+
     if args.save_image_steps > 0:
         os.mkdir(f"images/{env_name}_{stamp}")
 
@@ -127,13 +178,20 @@ if __name__ == "__main__":
         if len(scores) >= 5:
             try:
                 plt.plot(scores, label="Scores Over Episodes")
-                plt.plot(savgol_filter(scores, args.episodes / 2, 4), label="Savgol Filter Smoothing")
+                plt.plot(
+                    savgol_filter(scores, args.episodes / 2, 4),
+                    label="Savgol Filter Smoothing",
+                )
                 plt.legend()
-                plt.savefig("./graphs/" + agent.model_file.split("/")[1][:-3] + "-scores.png")
+                plt.savefig(
+                    "./graphs/" + agent.model_file.split("/")[1][:-3] + "-scores.png"
+                )
             except KeyboardInterrupt:
                 onexit()
 
     atexit.register(onexit)
+
+    print("Action Space Length:", env.action_space.n)
 
     for ep in range(args.episodes):
         done = False
@@ -142,13 +200,15 @@ if __name__ == "__main__":
         score = 0
         start_time = time.time()
 
-        while not done and (args.episode_max_steps <= 0 or steps < args.episode_max_steps):
+        while not done and (
+            args.episode_max_steps <= 0 or steps < args.episode_max_steps
+        ):
             action = agent.choose_action(state)
             next_state, reward, done, info = env.step(action)
             if len(next_state) == 0:
                 continue
             next_state = process_state(next_state)
-            
+
             steps += 1
             score += reward
             time_elapsed = time.time() - start_time
@@ -162,11 +222,13 @@ if __name__ == "__main__":
             if args.save_image_steps > 0 and steps % args.save_image_steps == 0:
                 img = Image.fromarray(state.reshape(h, w, d))
                 img.save(f"images/{env_name}_{stamp}/ep_{ep}_step_{steps}.png")
-    
 
         scores.append(score)
-        avg_score = np.mean(scores[max(0, ep - 100): ep + 1])
-        print(f"Episode {ep + 1} Score {score} Average Score {avg_score} Episode Time {int(time_elapsed)}s" + " " * 10)
+        avg_score = np.mean(scores[max(0, ep - 100) : ep + 1])
+        print(
+            f"Episode {ep + 1} Score {score} Average Score {avg_score} Episode Time {int(time_elapsed)}s"
+            + " " * 10
+        )
 
         if not args.dont_save:
             agent.save_model()
