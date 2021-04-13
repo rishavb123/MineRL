@@ -13,22 +13,20 @@
             </Time>
             <Weather>clear</Weather>
             <AllowSpawning>true</AllowSpawning>
-            <AllowedMobs>Sheep</AllowedMobs>
+            <AllowedMobs>Zombie</AllowedMobs>
          </ServerInitialConditions>
          <ServerHandlers>
             <FlatWorldGenerator generatorString="3;minecraft:bedrock,2*minecraft:dirt,minecraft:grass;1;village" forceReset="true" />
             <DrawingDecorator>
                <!-- Tricks to clean the map before drawing (avoid entity duplication on the map) -->
                <!-- coordinates for cuboid are inclusive -->
-               <DrawCuboid type="bedrock" x1="-17" x2="18" y1="1" y2="8
-               " z1="-17" z2="18" />
-               <DrawCuboid type="air" x1="-14" x2="15" y1="4" y2="39" z1="-14" z2="15" />
-               <DrawCuboid type="glowstone" x1="-14" x2="15" y1="8" y2="8" z1="-14" z2="15" />
+               <DrawCuboid type="bedrock" x1="-15" x2="16" y1="1" y2="50" z1="-15" z2="16" />
+               <DrawCuboid type="air" x1="-12" x2="13" y1="4" y2="39" z1="-12" z2="13" />
+               <DrawCuboid type="glowstone" x1="-14" x2="15" y1="15" y2="30" z1="-14" z2="15" />
                <!-- <DrawBlock type="grass" x="-10" y="3" z="-10" /> -->
                <!-- Mobs -->
-               <DrawEntity type="Zombie" x="6.5" y="4" z="8.5" />
-               <DrawEntity type="Zombie" x="6.5" y="4" z="1.5" />
-               <DrawBlock type="mob_spawner" variant="Sheep" x="-10" y="4" z="-10" />
+               <DrawBlock type="mob_spawner" variant="Zombie" x="0" y="4" z="0" />
+               <DrawCuboid type="bedrock" x1="1" x2="-1" y1="5" y2="5" z1="-1" z2="1" />
             </DrawingDecorator>
             <ServerQuitFromTimeUp description="out_of_time" timeLimitMs="1000000" />
             <ServerQuitWhenAnyAgentFinishes />
@@ -69,10 +67,7 @@
                </Grid>
             </ObservationFromGrid>
             <ObservationFromFullStats />
-            <RewardForSendingCommand reward="1" />
-            <RewardForTouchingBlockType>
-               <Block behaviour="onceOnly" reward="0.2" type="bone_block" />
-            </RewardForTouchingBlockType>
+            <RewardForSendingCommand reward="0.5" />
             <RewardForDamagingEntity>
                <Mob reward="50" type="Zombie"/>
             </RewardForDamagingEntity>
@@ -80,11 +75,8 @@
                <Width>800</Width>
                <Height>600</Height>
             </VideoProducer>
-            <RewardForMissionEnd rewardForDeath="-1000">
-               <Reward description="out_of_time" reward="-900"/>
-               <Reward description="out_of_arena" reward="100"/>
-               <Reward description="drowned" reward="-800"/>
-               <Reward description="found_goal" reward="400"/>
+            <RewardForMissionEnd rewardForDeath="-100">
+               <Reward description="out_of_time" reward="100"/>
             </RewardForMissionEnd>
          </AgentHandlers>
       </AgentSection>
