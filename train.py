@@ -135,6 +135,8 @@ if __name__ == "__main__":
     )
 
     env_name = args.env.split("/")[1].split(".")[0]
+    if args.baseline:
+        env_name += "_baseline"
     stamp = int(time.time())
     model_file = (
         f"models/{env_name}_{stamp}.h5" if args.save_model == "" else args.save_model
