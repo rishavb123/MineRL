@@ -24,10 +24,12 @@ action_space = [
     "strafe 1",
     "strafe -1",
     "turn -0.1",
-    "turn 0.02",
+    "turn 0.1",
     "turn 0",
     "jump 1"
 ]
+
+episodes = 10
 
 agent_host = MalmoPython.AgentHost()
 try:
@@ -47,34 +49,35 @@ if __name__ == "__main__":
     mission = MalmoPython.MissionSpec(xml, True)
     record = MalmoPython.MissionRecordSpec()
 
-    max_retries = 3
-    for retry in range(max_retries):
-        try:
-            agent_host.startMission(mission, record)
-            break
-        except RuntimeError as e:
-            if retry == max_retries - 1:
-                print("Error starting mission:", e)
-                exit(1)
-            else:
-                time.sleep(2)
+    for ep in range(episodes):
+        max_retries = 3
+        for retry in range(max_retries):
+            try:
+                agent_host.startMission(mission, record)
+                break
+            except RuntimeError as e:
+                if retry == max_retries - 1:
+                    print("Error starting mission:", e)
+                    exit(1)
+                else:
+                    time.sleep(2)
 
-    world_state = agent_host.getWorldState()
-    while not world_state.has_mission_begun:
-        time.sleep(0.1)
         world_state = agent_host.getWorldState()
-        for error in world_state.errors:
-            print("Error:", error.text)
+        while not world_state.has_mission_begun:
+            time.sleep(0.1)
+            world_state = agent_host.getWorldState()
+            for error in world_state.errors:
+                print("Error:", error.text)
 
-    agent_host.sendCommand("attack 1")
+        agent_host.sendCommand("attack 1")
 
 
-    while world_state.is_mission_running:
-        time.sleep(0.1)
-        # agent_host.sendCommand(np.random.choice(action_space))
-        world_state = agent_host.getWorldState()
-        for error in world_state.errors:
-            print("Error:", error.text)
+        while world_state.is_mission_running:
+            time.sleep(0.1)
+            agent_host.sendCommand(np.random.choice(action_space))
+            world_state = agent_host.getWorldState()
+            for error in world_state.errors:
+                print("Error:", error.text)
 
     print()
     print("Mission Ended")
