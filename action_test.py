@@ -57,25 +57,27 @@ if __name__ == "__main__":
         episode=0,
         action_filter={
             "move",
-            "jumpmove",
+            # "jumpmove",
             "strafe",
-            "jumpstrafe",
+            # "jumpstrafe",
             "turn",
-            "movenorth",
-            "moveeast",
-            "movesouth",
-            "movewest",
-            "jumpnorth",
-            "jumpeast",
-            "jumpsouth",
-            "jumpwest",
-            "jump",
+            # "movenorth",
+            # "moveeast",
+            # "movesouth",
+            # "movewest",
+            # "jumpnorth",
+            # "jumpeast",
+            # "jumpsouth",
+            # "jumpwest",
+            # "jump",
             # "look",
             # "attack",
             # "use",
             # "jumpuse",
         },
     )
+    env.action_space.actions.append("turn 0")
+    env.action_space.n += 1
 
     stamp = int(time.time())
     if args.saveimagesteps > 0:
