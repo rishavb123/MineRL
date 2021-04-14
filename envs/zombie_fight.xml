@@ -18,7 +18,6 @@
          <ServerHandlers>
             <FlatWorldGenerator generatorString="3;minecraft:bedrock,2*minecraft:dirt,minecraft:grass;1;village" forceReset="true" />
             <DrawingDecorator>
-               <!-- Tricks to clean the map before drawing (avoid entity duplication on the map) -->
                <!-- coordinates for cuboid are inclusive -->
                <DrawCuboid type="bedrock" x1="-15" x2="16" y1="1" y2="50" z1="-15" z2="16" />
                <DrawCuboid type="air" x1="-12" x2="13" y1="4" y2="39" z1="-12" z2="13" />
@@ -48,15 +47,15 @@
             <DiscreteMovementCommands>
                <ModifierList type="deny-list"> 
                   <command>attack</command> 
-                  <command>turn</command>
+                  <!-- <command>turn</command> -->
                </ModifierList>
             </DiscreteMovementCommands>
-            <ContinuousMovementCommands turnSpeedDegs="36">
+            <!-- <ContinuousMovementCommands turnSpeedDegs="36">
                <ModifierList type="allow-list"> 
-                  <!-- <command>attack</command>  -->
+                  <command>attack</command> 
                   <command>turn</command>
                </ModifierList> 
-            </ContinuousMovementCommands>
+            </ContinuousMovementCommands> -->
             <ObservationFromNearbyEntities>
                <Range name="entities" xrange="8" yrange="2" zrange="6" />
             </ObservationFromNearbyEntities>
@@ -69,7 +68,7 @@
             <ObservationFromFullStats />
             <RewardForSendingCommand reward="0.1" />
             <RewardForDamagingEntity>
-               <Mob reward="w0" type="Zombie"/>
+               <Mob reward="20" type="Zombie"/>
             </RewardForDamagingEntity>
             <VideoProducer want_depth="false">
                <Width>800</Width>
