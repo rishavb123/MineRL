@@ -67,9 +67,9 @@
                </Grid>
             </ObservationFromGrid>
             <ObservationFromFullStats />
-            <RewardForSendingCommand reward="0.5" />
+            <RewardForSendingCommand reward="0.1" />
             <RewardForDamagingEntity>
-               <Mob reward="50" type="Zombie"/>
+               <Mob reward="w0" type="Zombie"/>
             </RewardForDamagingEntity>
             <VideoProducer want_depth="false">
                <Width>800</Width>
