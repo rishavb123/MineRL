@@ -51,7 +51,7 @@
                   <command>turn</command>
                </ModifierList>
             </DiscreteMovementCommands>
-            <ContinuousMovementCommands turnSpeedDegs="360">
+            <ContinuousMovementCommands turnSpeedDegs="36">
                <ModifierList type="allow-list"> 
                   <!-- <command>attack</command>  -->
                   <command>turn</command>
