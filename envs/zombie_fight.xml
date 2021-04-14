@@ -48,15 +48,15 @@
             <DiscreteMovementCommands>
                <ModifierList type="deny-list"> 
                   <command>attack</command> 
-                  <!-- <command>turn</command> -->
+                  <command>turn</command>
                </ModifierList>
             </DiscreteMovementCommands>
-            <!-- <ContinuousMovementCommands turnSpeedDegs="360">
+            <ContinuousMovementCommands turnSpeedDegs="360">
                <ModifierList type="allow-list"> 
-                  <command>attack</command> 
+                  <!-- <command>attack</command>  -->
                   <command>turn</command>
                </ModifierList> 
-            </ContinuousMovementCommands> -->
+            </ContinuousMovementCommands>
             <ObservationFromNearbyEntities>
                <Range name="entities" xrange="8" yrange="2" zrange="6" />
             </ObservationFromNearbyEntities>
