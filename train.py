@@ -69,6 +69,12 @@ def make_parser():
         default="",
         help="the file to save the model from after training",
     )
+    parser.add_argument(
+        "--epsilon",
+        type=float,
+        default=1.0,
+        help="The initial epsilon for epsilon greedy"
+    )
 
     def str2bool(v):
         if isinstance(v, bool):
