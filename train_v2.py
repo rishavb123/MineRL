@@ -1,3 +1,4 @@
+import json
 import atexit
 from model import make_model, make_baseline_model
 from agent import Agent
@@ -15,21 +16,37 @@ import tensorflow as tf
 import time
 
 # Constants
-xml_file = "./envs/zombie_fight.xml"
+xml_file = "./envs/zombie_fight_v2.xml"
 action_space = [
     "move 1",
+    "move 0",
     "move -1",
-    "jumpmove 1",
-    "jumpmove -1",
     "strafe 1",
     "strafe -1",
-    "turn -0.1",
-    "turn 0.1",
-    "turn 0",
-    "jump 1"
+    "turn -0.7",
+    "turn 0.7",
 ]
-
-episodes = 10
+finish_action = [
+    "move 0",
+    "move 0",
+    "move 0",
+    "strafe 0",
+    "strafe 0",
+    "turn 0",
+    "turn 0"
+]
+def process_observation(obs, kills, health, agent_host):
+    reward = 0
+    if "MobsKilled" in obs and "LineOfSight" in obs:
+        reward += (obs["MobsKilled"] - kills) * 40
+        if kills < obs["MobsKilled"]:
+            agent_host.sendCommand("chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}")
+        reward += (health - obs["Life"]) * -5
+        reward += 0.03
+        if obs["LineOfSight"]["hitType"] == "entity" and obs["LineOfSight"]["inRange"]:
+            reward += 2.5
+    return reward, obs["MobsKilled"], obs["Life"]
+episodes = 1000
 
 agent_host = MalmoPython.AgentHost()
 try:
@@ -42,10 +59,12 @@ if agent_host.receivedArgument("help"):
     print(agent_host.getUsage())
     exit(0)
 
+agent_host.setObservationsPolicy(MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY)
+agent_host.setVideoPolicy(MalmoPython.VideoPolicy.LATEST_FRAME_ONLY)
+
 if __name__ == "__main__":
     xml = Path(xml_file).read_text()
 
-    agent_host = MalmoPython.AgentHost()
     mission = MalmoPython.MissionSpec(xml, True)
     record = MalmoPython.MissionRecordSpec()
 
@@ -69,15 +88,30 @@ if __name__ == "__main__":
             for error in world_state.errors:
                 print("Error:", error.text)
 
-        agent_host.sendCommand("attack 1")
+        kills = 0
+        health = 20
 
+        agent_host.sendCommand("chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}")
+        agent_host.sendCommand("chat /gamerule naturalRegeneration false")
+        agent_host.sendCommand("chat /difficulty 1")
+
+        action = 0
 
         while world_state.is_mission_running:
-            time.sleep(0.1)
-            agent_host.sendCommand(np.random.choice(action_space))
-            world_state = agent_host.getWorldState()
-            for error in world_state.errors:
-                print("Error:", error.text)
+            agent_host.sendCommand("attack 1")
+            time.sleep(0.02)
+            if world_state.observations and world_state.video_frames:
+                agent_host.sendCommand(finish_action[action])
+                action = np.random.choice(len(action_space))
+                agent_host.sendCommand(action_space[action])
+
+                obs = json.loads(world_state.observations[-1].text)
+                reward, kills, health = process_observation(obs, kills, health, agent_host)
+                
+
+                world_state = agent_host.getWorldState()
+                for error in world_state.errors:
+                    print("Error:", error.text)
 
     print()
     print("Mission Ended")
