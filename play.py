@@ -16,7 +16,7 @@ import tensorflow as tf
 import time
 
 # Constants
-xml_file = "./envs/zombie_fight_v2.xml"
+xml_file = "./envs/zombie_fight.xml"
 action_space = [
     "move 1",
     "move 0",

@@ -9,7 +9,7 @@ import time
 import numpy as np
 
 # Constants
-xml_file = "./envs/zombie_fight_v2.xml"
+xml_file = "./envs/zombie_fight.xml"
 episodes = 1000
 baseline = False
 video_shape = (480, 640, 3)
