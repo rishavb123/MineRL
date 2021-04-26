@@ -147,6 +147,9 @@ if __name__ == "__main__":
     model_file = (
         f"models/{env_name}_{stamp}.h5" if args.save_model == "" else args.save_model
     )
+    metric_file = (
+        f"metrics/{env_name}_{stamp}.json"
+    )
     h, w, d = env.observation_space.shape
     input_shape = (224, 224, 3) if args.baseline else (h, w, d)
     model = (
@@ -164,6 +167,7 @@ if __name__ == "__main__":
         input_shape=input_shape,
         model=model,
         model_file=model_file,
+        metric_file=metric_file,
         epsilon_decay=0.999,
         epsilon_min=0.01,
     )
