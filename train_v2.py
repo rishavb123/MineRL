@@ -25,7 +25,7 @@ agent_cfg = {
     "epsilon_decay": 0.999,
     "epsilon_min": 0.01,
     "copy_period": 300,
-    "mem_size": 200,
+    "mem_size": 250,
 }
 
 
