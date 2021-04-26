@@ -118,5 +118,5 @@ class MalmoAgent(Agent):
         frame_shape = (frame.height, frame.width, frame.channels)
         image = pixels.reshape(frame_shape)
         if self.input_shape != frame_shape:
-            image = tf.image.resize(image, (224, 224))
+            image = tf.image.resize(image, (self.input_shape[0], self.input_shape[1]))
         return image
