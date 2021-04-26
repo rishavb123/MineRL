@@ -77,6 +77,7 @@ class MalmoAgent(Agent):
         self.agent_host.send_command(MalmoAgent.finish_actions[self.temp["last_action"]])
         self.agent_host.send_command(MalmoAgent.actions[action])
         self.temp["last_action"] = action
+        return action
 
     def process_observation(self, obs):
         if "MobsKilled" in obs and "LineOfSight" in obs:
