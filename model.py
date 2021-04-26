@@ -10,23 +10,18 @@ def make_model(input_shape, n):
         )
     )
     model.add(tf.keras.layers.MaxPooling2D((2, 2)))
-    # assert model.output_shape == (None, 133, 99, 32) # assuming input_shape of (800, 600, 3)
 
     model.add(tf.keras.layers.Conv2D(64, (4, 4), strides=(2, 2), activation="relu"))
     model.add(tf.keras.layers.MaxPooling2D((2, 2)))
-    # assert model.output_shape == (None, 32, 24, 64)
 
     model.add(tf.keras.layers.Conv2D(128, (3, 3), activation="relu"))
     model.add(tf.keras.layers.MaxPooling2D((2, 2)))
-    # assert model.output_shape == (None, 15, 11, 128)
 
     model.add(tf.keras.layers.Flatten())
-    # assert model.output_shape == (None, 15*11*128)
 
     model.add(tf.keras.layers.Dense(1000, activation="relu"))
     model.add(tf.keras.layers.Dense(500, activation="relu"))
     model.add(tf.keras.layers.Dense(n))
-    # assert model.output_shape == (None, n)
 
     return model
 
