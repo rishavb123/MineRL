@@ -40,6 +40,7 @@ if __name__ == "__main__":
     h, w, d = video_shape
     input_shape = (224, 224, 3) if baseline else (h, w, d)
     n = len(MalmoAgent.actions)
+    r = lambda x: np.around(x, decimals=3)
 
     # Environment Setup
     agent_host = MalmoPython.AgentHost()
@@ -146,8 +147,8 @@ if __name__ == "__main__":
                 step += 1
                 time_elapsed = time.time() - start_time
                 print(
-                    f"Step {1 + step}; Reward {reward}; Done {done}; Score {agent.temp['cumulative_reward']}; Epsilon {agent.epsilon}; Time Elapsed {int(time_elapsed)}s"
-                    + " " * 10,
+                    f"Step {1 + step}; Reward {r(reward)}; Score {r(agent.temp['cumulative_reward'])}; Epsilon {r(agent.epsilon)}; Time Elapsed {int(time_elapsed)}s"
+                    + " " * 20,
                     end="\r",
                 )
 
@@ -158,8 +159,8 @@ if __name__ == "__main__":
             ]
         )
         print(
-            f"Episode {ep + 1} of {episodes}; Score {agent.metrics['cumulative_rewards'][-1]}; Average Score {avg_score}; Episode Time {int(time_elapsed)}s"
-            + " " * 10
+            f"Episode {ep + 1} of {episodes}; Score {r(agent.metrics['cumulative_rewards'][-1])}; Average Score {r(avg_score)}; Episode Time {int(time_elapsed)}s"
+            + " " * 20
         )
         if save:
             agent.save_model()
