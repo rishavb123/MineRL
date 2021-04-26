@@ -1,3 +1,4 @@
+import json
 import numpy as np
 import tensorflow as tf
 
@@ -16,6 +17,7 @@ class Agent:
         input_shape,
         model,
         model_file,
+        data_file,
         epsilon_decay=0.999,
         epsilon_min=0.01,
         copy_period=300,
@@ -28,12 +30,15 @@ class Agent:
         self.epsilon_min = epsilon_min
         self.batch_size = batch_size
         self.model_file = model_file
+        self.data_file = data_file
         self.copy_period = copy_period
 
         self.memory = ReplayBuffer(mem_size, input_shape, num_actions, discrete=True)
         self.dqn = DQN(model, learning_rate=alpha)
         self.target_dqn = self.dqn.create_target_network()
         self.learn_counter = 0
+        self.metrics = {}
+        self.temp = {}
 
     def remember(self, state, action, reward, next_state, done):
         self.memory.store_transition(state, action, reward, next_state, done)
@@ -72,3 +77,9 @@ class Agent:
             model_file = self.model_file
         self.dqn.load_model(model_file)
         self.target_dqn.copy_from(self.dqn)
+
+    def save_data(self, metric_file=None):
+        if metric_file == None or metric_file == "":
+            metric_file = self.metric_file
+        with open(metric_file, 'w') as out_file:
+            json.dump(self.metrics, out_file)
