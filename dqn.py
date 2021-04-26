@@ -1,8 +1,10 @@
 import tensorflow as tf
 
-class DQN:
 
-    def __init__(self, model, loss='mse', learning_rate=1e-3, optimizer=tf.keras.optimizers.Adam):
+class DQN:
+    def __init__(
+        self, model, loss="mse", learning_rate=1e-3, optimizer=tf.keras.optimizers.Adam
+    ):
         self.model = model
         self.model.compile(optimizer=optimizer(learning_rate), loss=loss)
 
@@ -23,4 +25,3 @@ class DQN:
 
     def create_target_network(self):
         return DQN(tf.keras.models.clone_model(self.model))
-

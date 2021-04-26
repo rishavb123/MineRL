@@ -33,34 +33,41 @@ finish_action = [
     "strafe 0",
     "strafe 0",
     "turn 0",
-    "turn 0"
+    "turn 0",
 ]
 episodes = 1000
+
+
 def process_observation(obs, kills, health, agent_host):
     reward = 0
     if "MobsKilled" in obs and "LineOfSight" in obs:
         reward += (obs["MobsKilled"] - kills) * 40
         if kills < obs["MobsKilled"]:
-            agent_host.sendCommand("chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}")
+            agent_host.sendCommand(
+                "chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}"
+            )
         reward += (health - obs["Life"]) * -5
         reward += 0.03
         if obs["LineOfSight"]["hitType"] == "entity" and obs["LineOfSight"]["inRange"]:
             reward += 2.5
     return reward, obs["MobsKilled"], obs["Life"]
 
+
 if __name__ == "__main__":
     agent_host = MalmoPython.AgentHost()
     try:
-        agent_host.parse( sys.argv )
+        agent_host.parse(sys.argv)
     except RuntimeError as e:
-        print('ERROR:',e)
+        print("ERROR:", e)
         print(agent_host.getUsage())
         exit(1)
     if agent_host.receivedArgument("help"):
         print(agent_host.getUsage())
         exit(0)
 
-    agent_host.setObservationsPolicy(MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY)
+    agent_host.setObservationsPolicy(
+        MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY
+    )
     agent_host.setVideoPolicy(MalmoPython.VideoPolicy.LATEST_FRAME_ONLY)
 
     xml = Path(xml_file).read_text()
@@ -93,7 +100,9 @@ if __name__ == "__main__":
         kills = -1
         health = -1
 
-        agent_host.sendCommand("chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}")
+        agent_host.sendCommand(
+            "chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}"
+        )
         agent_host.sendCommand("chat /gamerule naturalRegeneration false")
         agent_host.sendCommand("chat /difficulty 1")
 
@@ -118,7 +127,9 @@ if __name__ == "__main__":
                 agent_host.sendCommand(action_space[action])
 
                 obs = json.loads(world_state.observations[-1].text)
-                reward, kills, health = process_observation(obs, kills, health, agent_host)
+                reward, kills, health = process_observation(
+                    obs, kills, health, agent_host
+                )
 
                 i += 1
 

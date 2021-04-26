@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class ReplayBuffer:
     def __init__(self, mem_size, input_shape, n_actions, discrete=False):
         self.mem_size = mem_size

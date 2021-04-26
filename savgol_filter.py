@@ -1,6 +1,7 @@
 import numpy as np
 
-def savgol_filter(y, window_size, degree): #Savitzky-Golay Filter
+
+def savgol_filter(y, window_size, degree):  # Savitzky-Golay Filter
     if len(y) == 1:
         return y
     y_smooth = []
