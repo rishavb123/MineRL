@@ -64,6 +64,7 @@ if __name__ == "__main__":
     agent_host.setVideoPolicy(MalmoPython.VideoPolicy.LATEST_FRAME_ONLY)
 
     xml = Path(xml_file).read_text()
+    xml = xml.replace("{{width}}", str(640)).replace("{{height}}", str(480))
 
     mission = MalmoPython.MissionSpec(xml, True)
     record = MalmoPython.MissionRecordSpec()
@@ -104,6 +105,7 @@ if __name__ == "__main__":
             time.sleep(0.02)
             if len(world_state.observations) and len(world_state.video_frames):
                 obs = json.loads(world_state.observations[-1].text)
+                frame = world_state.video_frames[0].pixels
                 if i == 0:
                     if "MobsKilled" in obs:
                         kills = obs["MobsKilled"]
