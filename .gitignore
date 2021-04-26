@@ -142,4 +142,4 @@ cython_debug/
 .vscode
 
 # Large Files
-images
+archive/images
