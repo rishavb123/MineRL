@@ -71,11 +71,12 @@ class Agent:
 
         self.dqn.get_model().fit(states, qs_target, verbose=0)
 
-        if self.epsilon > self.epsilon_min:
-            self.epsilon = self.epsilon * self.epsilon_decay
-
         if self.learn_counter % self.copy_period == 0:
             self.target_dqn.copy_from(self.dqn)
+
+    def finished_episode(self):
+        if self.epsilon > self.epsilon_min:
+            self.epsilon = self.epsilon * self.epsilon_decay
 
     def save_model(self):
         self.dqn.save_model(self.model_file)

@@ -24,8 +24,8 @@ agent_cfg = {
     "gamma": 0.99,
     "batch_size": 64,
     "epsilon": 1,
-    "epsilon_decay": 0.9999,
-    "epsilon_min": 0.01,
+    "epsilon_decay": 0.998,
+    "epsilon_min": 0.05,
     "copy_period": 300,
     "mem_size": 10000 if baseline else 20000,
 }

@@ -72,6 +72,7 @@ class MalmoAgent(Agent):
         self.temp["last_action"] = 0
 
     def finished_episode(self):
+        super().finished_episode()
         self.metrics["cumulative_rewards"].append(self.temp["cumulative_reward"])
         self.metrics["kills"].append(self.temp["kills"])
         self.reset_temp_data()
