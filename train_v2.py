@@ -35,6 +35,7 @@ finish_action = [
     "turn 0",
     "turn 0"
 ]
+episodes = 1000
 def process_observation(obs, kills, health, agent_host):
     reward = 0
     if "MobsKilled" in obs and "LineOfSight" in obs:
@@ -46,23 +47,22 @@ def process_observation(obs, kills, health, agent_host):
         if obs["LineOfSight"]["hitType"] == "entity" and obs["LineOfSight"]["inRange"]:
             reward += 2.5
     return reward, obs["MobsKilled"], obs["Life"]
-episodes = 1000
-
-agent_host = MalmoPython.AgentHost()
-try:
-    agent_host.parse( sys.argv )
-except RuntimeError as e:
-    print('ERROR:',e)
-    print(agent_host.getUsage())
-    exit(1)
-if agent_host.receivedArgument("help"):
-    print(agent_host.getUsage())
-    exit(0)
-
-agent_host.setObservationsPolicy(MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY)
-agent_host.setVideoPolicy(MalmoPython.VideoPolicy.LATEST_FRAME_ONLY)
 
 if __name__ == "__main__":
+    agent_host = MalmoPython.AgentHost()
+    try:
+        agent_host.parse( sys.argv )
+    except RuntimeError as e:
+        print('ERROR:',e)
+        print(agent_host.getUsage())
+        exit(1)
+    if agent_host.receivedArgument("help"):
+        print(agent_host.getUsage())
+        exit(0)
+
+    agent_host.setObservationsPolicy(MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY)
+    agent_host.setVideoPolicy(MalmoPython.VideoPolicy.LATEST_FRAME_ONLY)
+
     xml = Path(xml_file).read_text()
 
     mission = MalmoPython.MissionSpec(xml, True)
@@ -96,11 +96,12 @@ if __name__ == "__main__":
         agent_host.sendCommand("chat /difficulty 1")
 
         action = 0
-
+        agent_host.sendCommand("turn 1")
         while world_state.is_mission_running:
             agent_host.sendCommand("attack 1")
+            world_state = agent_host.getWorldState()
             time.sleep(0.02)
-            if world_state.observations and world_state.video_frames:
+            if len(world_state.observations) and len(world_state.video_frames):
                 agent_host.sendCommand(finish_action[action])
                 action = np.random.choice(len(action_space))
                 agent_host.sendCommand(action_space[action])
@@ -109,9 +110,9 @@ if __name__ == "__main__":
                 reward, kills, health = process_observation(obs, kills, health, agent_host)
                 
 
-                world_state = agent_host.getWorldState()
                 for error in world_state.errors:
                     print("Error:", error.text)
-
+                print("here")
+        print("finished")
     print()
     print("Mission Ended")
