@@ -95,13 +95,14 @@ class MalmoAgent(Agent):
                 obs["MobsKilled"] - self.temp["total_kills"]
             ) * MalmoAgent.rewards["per_kill"]
             if self.temp["total_kills"] < obs["MobsKilled"]:
-                self.agent_host.sendCommand(
-                    "chat /summon Zombie "
-                    + str(np.random.randint(-10, 11))
-                    + " 6 "
-                    + str(np.random.randint(-10, 11))
-                    + " {HealF:10.0f}"
-                )
+                for _ in range(self.obs["MobsKilled" - self.temp["total_kills"]]):
+                    self.agent_host.sendCommand(
+                        "chat /summon Zombie "
+                        + str(np.random.randint(-10, 11))
+                        + " 6 "
+                        + str(np.random.randint(-10, 11))
+                        + " {HealF:10.0f}"
+                    )
                 self.temp["kills"] += obs["MobsKilled"] - self.temp["total_kills"]
                 self.temp["total_kills"] = obs["MobsKilled"]
             reward += (self.temp["health"] - obs["Life"]) * MalmoAgent.rewards[
