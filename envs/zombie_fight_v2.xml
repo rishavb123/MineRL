@@ -42,8 +42,8 @@
 			<ObservationFromFullStats/>
 			<ObservationFromRay/>
             <VideoProducer want_depth="false">
-                <Width>640</Width>
-                <Height>480</Height>
+                <Width>{{width}}</Width>
+                <Height>{{height}}</Height>
             </VideoProducer>
 			<RewardForSendingCommand reward="-1" />
 		</AgentHandlers>
