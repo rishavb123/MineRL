@@ -45,21 +45,29 @@ class Agent:
 
     def choose_action(self, state):
         state = state[np.newaxis, :]
-        return np.random.choice(self.action_space) if np.random.random() < self.epsilon else np.argmax(self.dqn.get_model().predict(state))
+        return (
+            np.random.choice(self.action_space)
+            if np.random.random() < self.epsilon
+            else np.argmax(self.dqn.get_model().predict(state))
+        )
 
     def learn(self):
         self.learn_counter += 1
         if self.memory.mem_counter < self.batch_size:
             return
-        states, actions, rewards, next_states, terminals = self.memory.sample_buffer(self.batch_size)
+        states, actions, rewards, next_states, terminals = self.memory.sample_buffer(
+            self.batch_size
+        )
 
         qs = self.dqn.get_model().predict(states)
         qs_next = self.target_dqn.get_model().predict(next_states)
 
         batch_index = np.arange(self.batch_size)
-        
+
         qs_target = qs.copy()
-        qs_target[batch_index, actions] = rewards + self.gamma * np.max(qs_next, axis=1) * terminals
+        qs_target[batch_index, actions] = (
+            rewards + self.gamma * np.max(qs_next, axis=1) * terminals
+        )
 
         self.dqn.get_model().fit(states, qs_target, verbose=0)
 
@@ -81,5 +89,5 @@ class Agent:
     def save_data(self, metric_file=None):
         if metric_file == None or metric_file == "":
             metric_file = self.metric_file
-        with open(metric_file, 'w') as out_file:
+        with open(metric_file, "w") as out_file:
             json.dump(self.metrics, out_file)

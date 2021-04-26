@@ -50,7 +50,7 @@ class MalmoAgent(Agent):
             "strafe 0",
             "strafe 0",
             "turn 0",
-            "turn 0"
+            "turn 0",
         ]
         self.data["cumulative_rewards"] = []
         self.data["kills"] = []
@@ -84,14 +84,19 @@ class MalmoAgent(Agent):
                 self.temp["health"] = obs["Life"]
             reward += (obs["MobsKilled"] - self.temp["total_kills"]) * 40
             if self.temp["total_kills"] < obs["MobsKilled"]:
-                self.agent_host.sendCommand("chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}")
+                self.agent_host.sendCommand(
+                    "chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}"
+                )
                 self.temp["kills"] += obs["MobsKilled"] - self.temp["total_kills"]
                 self.temp["total_kills"] = obs["MobsKilled"]
             reward += (self.temp["health"] - obs["Life"]) * -5
             if self.temp["health"] - obs["Life"]:
                 self.temp["health"] = obs["Life"]
             reward += 0.03
-            if obs["LineOfSight"]["hitType"] == "entity" and obs["LineOfSight"]["inRange"]:
+            if (
+                obs["LineOfSight"]["hitType"] == "entity"
+                and obs["LineOfSight"]["inRange"]
+            ):
                 reward += 2.5
             self.temp["cumulative_reward"] += reward
             return reward
