@@ -17,7 +17,7 @@ class Agent:
         input_shape,
         model,
         model_file,
-        data_file,
+        metric_file,
         epsilon_decay=0.999,
         epsilon_min=0.01,
         copy_period=300,
@@ -30,7 +30,7 @@ class Agent:
         self.epsilon_min = epsilon_min
         self.batch_size = batch_size
         self.model_file = model_file
-        self.data_file = data_file
+        self.metric_file = metric_file
         self.copy_period = copy_period
 
         self.memory = ReplayBuffer(mem_size, input_shape, num_actions, discrete=True)

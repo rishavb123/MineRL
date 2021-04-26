@@ -25,7 +25,7 @@ agent_cfg = {
     "epsilon_decay": 0.999,
     "epsilon_min": 0.01,
     "copy_period": 300,
-    "mem_size": 250,
+    "mem_size": 200,
 }
 
 
@@ -140,15 +140,13 @@ if __name__ == "__main__":
                     agent.learn()
                 reward, done = agent.process_observation(obs)
 
-                agent.choose_and_take_action(state)
-
                 state = next_state
+                agent.choose_and_take_action(state)
 
                 step += 1
                 time_elapsed = time.time() - start_time
-                errors = [str(error.text) for error in world_state.errors]
                 print(
-                    f"Step {1 + step}; Reward {reward}; Done {done}; Score {agent.temp['cumulative_reward']}; Time Elapsed {int(time_elapsed)}s; Errors: [{','.join(errors)}];"
+                    f"Step {1 + step}; Reward {reward}; Done {done}; Score {agent.temp['cumulative_reward']}; Time Elapsed {int(time_elapsed)}s"
                     + " " * 10,
                     end="\r",
                 )

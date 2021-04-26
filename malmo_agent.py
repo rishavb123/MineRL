@@ -60,6 +60,7 @@ class MalmoAgent(Agent):
         self.reset_temp_data()
         self.temp["total_kills"] = -1
         self.agent_host = agent_host
+        self.input_shape = input_shape
 
     def reset_temp_data(self):
         self.temp["kills"] = 0
@@ -74,8 +75,8 @@ class MalmoAgent(Agent):
 
     def choose_and_take_action(self, state):
         action = self.choose_action(state)
-        self.agent_host.send_command(MalmoAgent.finish_actions[self.temp["last_action"]])
-        self.agent_host.send_command(MalmoAgent.actions[action])
+        self.agent_host.sendCommand(MalmoAgent.finish_actions[self.temp["last_action"]])
+        self.agent_host.sendCommand(MalmoAgent.actions[action])
         self.temp["last_action"] = action
         return action
 
