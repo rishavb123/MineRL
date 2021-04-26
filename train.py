@@ -37,7 +37,7 @@ if __name__ == "__main__":
     env_name = xml_file.split("/")[-1].split(".")[0]
     if baseline:
         env_name += "_baseline"
-    env_name += str(num_zombies)
+    env_name += "_" + str(num_zombies)
     model_file = f"models/{env_name}_{stamp}.h5"
     metric_file = f"metrics/{env_name}_{stamp}.json"
     h, w, d = video_shape
