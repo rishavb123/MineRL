@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-def make_model(input_shape, n):
+def make_model_big(input_shape, n):
     model = tf.keras.models.Sequential()
 
     model.add(
@@ -25,6 +25,29 @@ def make_model(input_shape, n):
 
     return model
 
+def make_model(input_shape, n):
+    model = tf.keras.models.Sequential()
+
+    model.add(
+        tf.keras.layers.Conv2D(
+            32, (3, 3), strides=(3, 3), activation="relu", input_shape=input_shape
+        )
+    )
+    model.add(tf.keras.layers.MaxPooling2D((2, 2)))
+
+    model.add(tf.keras.layers.Conv2D(64, (2, 2), strides=(2, 2), activation="relu"))
+    model.add(tf.keras.layers.MaxPooling2D((2, 2)))
+
+    model.add(tf.keras.layers.Conv2D(128, (2, 2), activation="relu"))
+    model.add(tf.keras.layers.MaxPooling2D((2, 2)))
+
+    model.add(tf.keras.layers.Flatten())
+
+    model.add(tf.keras.layers.Dense(1000, activation="relu"))
+    model.add(tf.keras.layers.Dense(500, activation="relu"))
+    model.add(tf.keras.layers.Dense(n))
+
+    return model
 
 def make_baseline_model(input_shape, n):
     model = tf.keras.models.Sequential()

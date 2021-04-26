@@ -11,21 +11,23 @@ import numpy as np
 # Constants
 xml_file = "./envs/zombie_fight.xml"
 episodes = 1000
-baseline = False
+baseline = True
 video_shape = (480, 640, 3)
+input_shape = (84, 112, 3)
 save = True
 load_model = None
 max_steps_per_episode = 1000
 running_average_length = episodes // 20
+num_zombies = 2
 agent_cfg = {
     "alpha": 0.0005,
     "gamma": 0.99,
-    "batch_size": 16,
+    "batch_size": 64,
     "epsilon": 1,
-    "epsilon_decay": 0.999,
+    "epsilon_decay": 0.9995,
     "epsilon_min": 0.01,
     "copy_period": 300,
-    "mem_size": 250,
+    "mem_size": 10000 if baseline else 20000,
 }
 
 
@@ -38,7 +40,7 @@ if __name__ == "__main__":
     if baseline:
         env_name += "_baseline"
     h, w, d = video_shape
-    input_shape = (224, 224, 3) if baseline else (h, w, d)
+    input_shape = (224, 224, 3) if baseline else input_shape
     n = len(MalmoAgent.actions)
     r = lambda x: np.around(x, decimals=3)
 
@@ -130,6 +132,7 @@ if __name__ == "__main__":
             agent_host.sendCommand("attack 1")
             world_state = agent_host.getWorldState()
             time.sleep(0.02)
+            agent_host.sendCommand("attack 1")
 
             if len(world_state.observations) and len(world_state.video_frames):
                 obs = json.loads(world_state.observations[-1].text)
