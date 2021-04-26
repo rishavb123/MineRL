@@ -1,74 +1,96 @@
 import json
-import atexit
 from model import make_model, make_baseline_model
-from agent import Agent
-from savgol_filter import savgol_filter
+from malmo_agent import MalmoAgent
 
 import malmo.MalmoPython as MalmoPython
-import argparse
 from pathlib import Path
-from PIL import Image
-import os
 import sys
-import matplotlib.pyplot as plt
-import numpy as np
-import tensorflow as tf
 import time
+import numpy as np
 
 # Constants
 xml_file = "./envs/zombie_fight_v2.xml"
-action_space = [
-    "move 1",
-    "move 0",
-    "move -1",
-    "strafe 1",
-    "strafe -1",
-    "turn -0.7",
-    "turn 0.7",
-]
-finish_action = [
-    "move 0",
-    "move 0",
-    "move 0",
-    "strafe 0",
-    "strafe 0",
-    "turn 0",
-    "turn 0"
-]
 episodes = 1000
-def process_observation(obs, kills, health, agent_host):
-    reward = 0
-    if "MobsKilled" in obs and "LineOfSight" in obs:
-        reward += (obs["MobsKilled"] - kills) * 40
-        if kills < obs["MobsKilled"]:
-            agent_host.sendCommand("chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}")
-        reward += (health - obs["Life"]) * -5
-        reward += 0.03
-        if obs["LineOfSight"]["hitType"] == "entity" and obs["LineOfSight"]["inRange"]:
-            reward += 2.5
-    return reward, obs["MobsKilled"], obs["Life"]
+baseline = False
+video_shape = (480, 640, 3)
+save = True
+load_model = None
+max_steps_per_episode = 1000
+running_average_length = episodes // 20
+agent_cfg = {
+    "alpha": 0.0005,
+    "gamma": 0.99,
+    "batch_size": 16,
+    "epsilon": 1,
+    "epsilon_decay": 0.999,
+    "epsilon_min": 0.01,
+    "copy_period": 300,
+    "mem_size": 250,
+}
+
 
 if __name__ == "__main__":
+    # Runtime Generated Constants
+    stamp = int(time.time())
+    env_name = xml_file.split("/")[-1].split(".")[0]
+    model_file = f"models/{env_name}_{stamp}.h5"
+    metric_file = f"metrics/{env_name}_{stamp}.json"
+    if baseline:
+        env_name += "_baseline"
+    h, w, d = video_shape
+    input_shape = (224, 224, 3) if baseline else (h, w, d)
+    n = len(MalmoAgent.actions)
+
+    # Environment Setup
     agent_host = MalmoPython.AgentHost()
     try:
-        agent_host.parse( sys.argv )
+        agent_host.parse(sys.argv)
     except RuntimeError as e:
-        print('ERROR:',e)
+        print("ERROR:", e)
         print(agent_host.getUsage())
         exit(1)
     if agent_host.receivedArgument("help"):
         print(agent_host.getUsage())
         exit(0)
 
-    agent_host.setObservationsPolicy(MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY)
+    agent_host.setObservationsPolicy(
+        MalmoPython.ObservationsPolicy.LATEST_OBSERVATION_ONLY
+    )
     agent_host.setVideoPolicy(MalmoPython.VideoPolicy.LATEST_FRAME_ONLY)
 
     xml = Path(xml_file).read_text()
+    xml = xml.replace("{{width}}", str(w)).replace("{{height}}", str(h))
 
     mission = MalmoPython.MissionSpec(xml, True)
     record = MalmoPython.MissionRecordSpec()
 
+    # Agent Setup
+    model = (
+        make_baseline_model(video_shape, n) if baseline else make_model(input_shape, n)
+    )
+    print(model.summary())
+    agent = MalmoAgent(
+        alpha=agent_cfg["alpha"],
+        gamma=agent_cfg["gamma"],
+        batch_size=agent_cfg["batch_size"],
+        epsilon=agent_cfg["epsilon"],
+        epsilon_decay=agent_cfg["epsilon_decay"],
+        epsilon_min=agent_cfg["epsilon_min"],
+        copy_period=agent_cfg["copy_period"],
+        mem_size=agent_cfg["mem_size"],
+        model=model,
+        model_file=model_file,
+        metric_file=metric_file,
+        input_shape=input_shape,
+        agent_host=agent_host,
+    )
+    if load_model:
+        agent.load_model(load_model)
+
+    # Episode Loop
     for ep in range(episodes):
+
+        # Mission Setup
         max_retries = 3
         for retry in range(max_retries):
             try:
@@ -88,37 +110,59 @@ if __name__ == "__main__":
             for error in world_state.errors:
                 print("Error:", error.text)
 
-        i = 0
-        kills = -1
-        health = -1
-
-        agent_host.sendCommand("chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}")
+        agent_host.sendCommand(
+            "chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}"
+        )
         agent_host.sendCommand("chat /gamerule naturalRegeneration false")
         agent_host.sendCommand("chat /difficulty 1")
 
+        # Step Loop
+        step = 0
+        start_time = time.time()
+
+        state = None
         action = 0
-        agent_host.sendCommand("turn 1")
-        while world_state.is_mission_running:
+        reward = 0
+        done = False
+
+        while world_state.is_mission_running and step < max_steps_per_episode:
             agent_host.sendCommand("attack 1")
             world_state = agent_host.getWorldState()
             time.sleep(0.02)
+
             if len(world_state.observations) and len(world_state.video_frames):
                 obs = json.loads(world_state.observations[-1].text)
-                if i == 0:
-                    if "MobsKilled" in obs:
-                        kills = obs["MobsKilled"]
-                        health = obs["Life"]
-                        i += 1
-                    continue
+                frame = world_state.video_frames[0]
 
-                agent_host.sendCommand(finish_action[action])
-                action = np.random.choice(len(action_space))
-                agent_host.sendCommand(action_space[action])
+                next_state = agent.process_frame(frame)
+                if state is not None:
+                    agent.remember(state, action, reward, next_state, done)
+                    agent.learn()
+                reward, done = agent.process_observation(obs)
 
-                obs = json.loads(world_state.observations[-1].text)
-                reward, kills, health = process_observation(obs, kills, health, agent_host)
+                agent.choose_and_take_action(state)
 
-                i += 1
+                state = next_state
 
-                for error in world_state.errors:
-                    print("Error:", error.text)
+                step += 1
+                time_elapsed = time.time() - start_time
+                errors = [str(error.text) for error in world_state.errors]
+                print(
+                    f"Step {1 + step}; Reward {reward}; Done {done}; Score {agent.temp['cumulative_reward']}; Time Elapsed {int(time_elapsed)}s; Errors: [{','.join(errors)}];"
+                    + " " * 10,
+                    end="\r",
+                )
+
+        agent.finished_episode()
+        avg_score = np.mean(
+            agent.data["cumulative_rewards"][
+                max(0, ep - running_average_length) : ep + 1
+            ]
+        )
+        print(
+            f"Episode {ep + 1} of {episodes}; Score {agent.data['cumulative_rewards'][-1]}; Average Score {avg_score}; Episode Time {int(time_elapsed)}s"
+            + " " * 10
+        )
+        if save:
+            agent.save_model()
+            agent.save_data()
