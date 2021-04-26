@@ -35,10 +35,11 @@ if __name__ == "__main__":
     # Runtime Generated Constants
     stamp = int(time.time())
     env_name = xml_file.split("/")[-1].split(".")[0]
-    model_file = f"models/{env_name}_{stamp}.h5"
-    metric_file = f"metrics/{env_name}_{stamp}.json"
     if baseline:
         env_name += "_baseline"
+    env_name += str(num_zombies)
+    model_file = f"models/{env_name}_{stamp}.h5"
+    metric_file = f"metrics/{env_name}_{stamp}.json"
     h, w, d = video_shape
     input_shape = (224, 224, 3) if baseline else input_shape
     n = len(MalmoAgent.actions)
