@@ -88,8 +88,9 @@ if __name__ == "__main__":
             for error in world_state.errors:
                 print("Error:", error.text)
 
-        kills = 0
-        health = 20
+        i = 0
+        kills = -1
+        health = -1
 
         agent_host.sendCommand("chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}")
         agent_host.sendCommand("chat /gamerule naturalRegeneration false")
@@ -102,17 +103,22 @@ if __name__ == "__main__":
             world_state = agent_host.getWorldState()
             time.sleep(0.02)
             if len(world_state.observations) and len(world_state.video_frames):
+                obs = json.loads(world_state.observations[-1].text)
+                if i == 0:
+                    if "MobsKilled" in obs:
+                        kills = obs["MobsKilled"]
+                        health = obs["Life"]
+                        i += 1
+                    continue
+
                 agent_host.sendCommand(finish_action[action])
                 action = np.random.choice(len(action_space))
                 agent_host.sendCommand(action_space[action])
 
                 obs = json.loads(world_state.observations[-1].text)
                 reward, kills, health = process_observation(obs, kills, health, agent_host)
-                
+
+                i += 1
 
                 for error in world_state.errors:
                     print("Error:", error.text)
-                print("here")
-        print("finished")
-    print()
-    print("Mission Ended")
