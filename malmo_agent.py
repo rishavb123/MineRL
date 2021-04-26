@@ -23,6 +23,12 @@ class MalmoAgent(Agent):
         "turn 0",
         "turn 0",
     ]
+    rewards = {
+        "per_kill": 100,
+        "per_health_lost": -4,
+        "per_step": 0.05,
+        "per_hit": 4
+    }
 
     def __init__(
         self,
@@ -87,22 +93,22 @@ class MalmoAgent(Agent):
                 self.temp["total_kills"] = obs["MobsKilled"]
             if self.temp["health"] == -1:
                 self.temp["health"] = obs["Life"]
-            reward += (obs["MobsKilled"] - self.temp["total_kills"]) * 40
+            reward += (obs["MobsKilled"] - self.temp["total_kills"]) * MalmoAgent.rewards["per_kill"]
             if self.temp["total_kills"] < obs["MobsKilled"]:
                 self.agent_host.sendCommand(
                     "chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}"
                 )
                 self.temp["kills"] += obs["MobsKilled"] - self.temp["total_kills"]
                 self.temp["total_kills"] = obs["MobsKilled"]
-            reward += (self.temp["health"] - obs["Life"]) * -5
+            reward += (self.temp["health"] - obs["Life"]) * MalmoAgent.rewards["per_health_lost"]
             if self.temp["health"] - obs["Life"]:
                 self.temp["health"] = obs["Life"]
-            reward += 0.03
+            reward += MalmoAgent.rewards["per_step"]
             if (
                 obs["LineOfSight"]["hitType"] == "entity"
                 and obs["LineOfSight"]["inRange"]
             ):
-                reward += 2.5
+                reward += MalmoAgent.rewards["per_hit"]
             self.temp["cumulative_reward"] += reward
             return reward, self.temp["health"] <= 0
         return 0, False
