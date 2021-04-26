@@ -11,7 +11,7 @@ import numpy as np
 # Constants
 xml_file = "./envs/zombie_fight.xml"
 episodes = 1000
-baseline = True
+baseline = False
 video_shape = (480, 640, 3)
 input_shape = (84, 112, 3)
 save = True
@@ -24,7 +24,7 @@ agent_cfg = {
     "gamma": 0.99,
     "batch_size": 64,
     "epsilon": 1,
-    "epsilon_decay": 0.9995,
+    "epsilon_decay": 0.9999,
     "epsilon_min": 0.01,
     "copy_period": 300,
     "mem_size": 10000 if baseline else 20000,
@@ -113,9 +113,14 @@ if __name__ == "__main__":
             for error in world_state.errors:
                 print("Error:", error.text)
 
-        agent_host.sendCommand(
-            "chat /summon Zombie 5.5 6 5.5 {Equipment:[{},{},{},{},{id:minecraft:stone_button}], HealF:10.0f}"
-        )
+        for _ in range(num_zombies):
+            agent_host.sendCommand(
+                "chat /summon Zombie "
+                + str(np.random.randint(-10, 11))
+                + " 6 "
+                + str(np.random.randint(-10, 11))
+                + " {HealF:10.0f}"
+            )
         agent_host.sendCommand("chat /gamerule naturalRegeneration false")
         agent_host.sendCommand("chat /difficulty 1")
 
