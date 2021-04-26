@@ -59,6 +59,7 @@ class MalmoAgent(Agent):
         )
         self.metrics["cumulative_rewards"] = []
         self.metrics["kills"] = []
+        self.metrics["times"] = []
         self.reset_temp_data()
         self.temp["total_kills"] = -1
         self.agent_host = agent_host

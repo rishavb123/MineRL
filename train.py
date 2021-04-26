@@ -160,8 +160,8 @@ if __name__ == "__main__":
                     + " " * 20,
                     end="\r",
                 )
-
         agent.finished_episode()
+        agent.metrics["times"].append(time_elapsed)
         avg_score = np.mean(
             agent.metrics["cumulative_rewards"][
                 max(0, ep - running_average_length) : ep + 1
