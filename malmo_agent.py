@@ -1,5 +1,7 @@
 from agent import Agent
 
+import numpy as np
+import tensorflow as tf
 
 class MalmoAgent(Agent):
 
@@ -100,5 +102,13 @@ class MalmoAgent(Agent):
             ):
                 reward += 2.5
             self.temp["cumulative_reward"] += reward
-            return reward
-        return 0
+            return reward, self.temp["health"] <= 0
+        return 0, False
+
+    def process_frame(self, frame):
+        pixels = np.array(frame.pixels, dtype=np.uint8)
+        frame_shape = (frame.height, frame.width, frame.channels)
+        image = pixels.reshape(frame_shape)
+        if self.input_shape != frame_shape:
+            image = tf.image.resize(image, (224, 224))
+        return image
