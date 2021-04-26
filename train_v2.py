@@ -146,7 +146,7 @@ if __name__ == "__main__":
                 step += 1
                 time_elapsed = time.time() - start_time
                 print(
-                    f"Step {1 + step}; Reward {reward}; Done {done}; Score {agent.temp['cumulative_reward']}; Time Elapsed {int(time_elapsed)}s"
+                    f"Step {1 + step}; Reward {reward}; Done {done}; Score {agent.temp['cumulative_reward']}; Epsilon {agent.epsilon}; Time Elapsed {int(time_elapsed)}s"
                     + " " * 10,
                     end="\r",
                 )
