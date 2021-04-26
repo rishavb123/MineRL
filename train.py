@@ -10,7 +10,7 @@ import numpy as np
 
 # Constants
 xml_file = "./envs/zombie_fight.xml"
-episodes = 1000
+episodes = 5000
 baseline = False
 video_shape = (480, 640, 3)
 input_shape = (84, 112, 3)
