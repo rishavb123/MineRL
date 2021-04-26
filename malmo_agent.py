@@ -2,11 +2,30 @@ from agent import Agent
 
 
 class MalmoAgent(Agent):
+
+    actions = [
+        "move 1",
+        "move 0",
+        "move -1",
+        "strafe 1",
+        "strafe -1",
+        "turn -0.7",
+        "turn 0.7",
+    ]
+    finish_actions = [
+        "move 0",
+        "move 0",
+        "move 0",
+        "strafe 0",
+        "strafe 0",
+        "turn 0",
+        "turn 0",
+    ]
+
     def __init__(
         self,
         alpha,
         gamma,
-        num_actions,
         epsilon,
         batch_size,
         input_shape,
@@ -22,7 +41,7 @@ class MalmoAgent(Agent):
         super(MalmoAgent, self).__init__(
             alpha,
             gamma,
-            num_actions,
+            len(MalmoAgent.actions),
             epsilon,
             batch_size,
             input_shape,
@@ -34,24 +53,6 @@ class MalmoAgent(Agent):
             copy_period,
             mem_size,
         )
-        self.actions = [
-            "move 1",
-            "move 0",
-            "move -1",
-            "strafe 1",
-            "strafe -1",
-            "turn -0.7",
-            "turn 0.7",
-        ]
-        self.finish_actions = [
-            "move 0",
-            "move 0",
-            "move 0",
-            "strafe 0",
-            "strafe 0",
-            "turn 0",
-            "turn 0",
-        ]
         self.data["cumulative_rewards"] = []
         self.data["kills"] = []
         self.reset_temp_data()
@@ -71,8 +72,8 @@ class MalmoAgent(Agent):
 
     def choose_and_take_action(self, state):
         action = self.choose_action(state)
-        self.agent_host.send_command(self.finish_actions[self.temp["last_action"]])
-        self.agent_host.send_command(self.actions[action])
+        self.agent_host.send_command(MalmoAgent.finish_actions[self.temp["last_action"]])
+        self.agent_host.send_command(MalmoAgent.actions[action])
         self.temp["last_action"] = action
 
     def process_observation(self, obs):
