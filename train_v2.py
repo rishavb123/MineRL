@@ -155,12 +155,12 @@ if __name__ == "__main__":
 
         agent.finished_episode()
         avg_score = np.mean(
-            agent.data["cumulative_rewards"][
+            agent.metrics["cumulative_rewards"][
                 max(0, ep - running_average_length) : ep + 1
             ]
         )
         print(
-            f"Episode {ep + 1} of {episodes}; Score {agent.data['cumulative_rewards'][-1]}; Average Score {avg_score}; Episode Time {int(time_elapsed)}s"
+            f"Episode {ep + 1} of {episodes}; Score {agent.metrics['cumulative_rewards'][-1]}; Average Score {avg_score}; Episode Time {int(time_elapsed)}s"
             + " " * 10
         )
         if save:

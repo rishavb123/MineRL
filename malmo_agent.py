@@ -55,8 +55,8 @@ class MalmoAgent(Agent):
             copy_period,
             mem_size,
         )
-        self.data["cumulative_rewards"] = []
-        self.data["kills"] = []
+        self.metrics["cumulative_rewards"] = []
+        self.metrics["kills"] = []
         self.reset_temp_data()
         self.temp["total_kills"] = -1
         self.agent_host = agent_host
@@ -68,8 +68,8 @@ class MalmoAgent(Agent):
         self.temp["last_action"] = 0
 
     def finished_episode(self):
-        self.data["cumulative_rewards"].append(self.temp["cumulative_reward"])
-        self.data["kills"].append(self.temp["kills"])
+        self.metrics["cumulative_rewards"].append(self.temp["cumulative_reward"])
+        self.metrics["kills"].append(self.temp["kills"])
         self.reset_temp_data()
 
     def choose_and_take_action(self, state):
