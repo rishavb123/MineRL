@@ -24,7 +24,7 @@ class MalmoAgent(Agent):
         "turn 0",
         "turn 0",
     ]
-    rewards = {"per_kill": 100, "per_health_lost": -4, "per_step": 0.05, "per_hit": 4}
+    rewards = {"per_kill": 100, "per_health_lost": -4, "per_step": 0.05, "per_hit": 10}
 
     def __init__(
         self,
