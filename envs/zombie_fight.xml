@@ -27,7 +27,7 @@
 	<AgentSection mode="Survival">
 		<Name>Skynet v0.0.1</Name>
 		<AgentStart>
-            <Placement pitch="30" x="5.5" y="4" yaw="90" z="5.5" />
+            <Placement pitch="10" x="5.5" y="4" yaw="90" z="5.5" />
             <Inventory>
                <InventoryBlock quantity="1" slot="0" type="diamond_sword" />
                <InventoryBlock quantity="1" slot="39" type="iron_helmet" />
