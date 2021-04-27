@@ -15,7 +15,7 @@ baseline = False
 video_shape = (480, 640, 3)
 input_shape = (84, 112, 3)
 save = True
-load_model = None
+load_model = None # "./models/zombie_fight_2_1619471920.h5"
 max_steps_per_episode = 1000
 running_average_length = episodes // 20
 num_zombies = 2
@@ -24,10 +24,11 @@ agent_cfg = {
     "gamma": 0.99,
     "batch_size": 64,
     "epsilon": 1,
+    # "epsilon": 0.663377846114,
     "epsilon_decay": 0.998,
     "epsilon_min": 0.05,
     "copy_period": 300,
-    "mem_size": 10000 if baseline else 20000,
+    "mem_size": 10000 if baseline else 10000,
 }
 
 
@@ -95,24 +96,33 @@ if __name__ == "__main__":
     for ep in range(episodes):
 
         # Mission Setup
-        max_retries = 3
-        for retry in range(max_retries):
-            try:
-                agent_host.startMission(mission, record)
-                break
-            except RuntimeError as e:
-                if retry == max_retries - 1:
-                    print("Error starting mission:", e)
-                    exit(1)
-                else:
-                    time.sleep(2)
+        first = True
+        working = False
+        while not working:
+            if not first:
+                print("Had to restart the mission since the data was not sent to the server!")
+            first = False
+            max_retries = 3
+            for retry in range(max_retries):
+                try:
+                    agent_host.startMission(mission, record)
+                    break
+                except RuntimeError as e:
+                    if retry == max_retries - 1:
+                        print("Error starting mission:", e)
+                        exit(1)
+                    else:
+                        time.sleep(2)
 
-        world_state = agent_host.getWorldState()
-        while not world_state.has_mission_begun:
-            time.sleep(0.1)
             world_state = agent_host.getWorldState()
-            for error in world_state.errors:
-                print("Error:", error.text)
+            i = 0
+            while not world_state.has_mission_begun and i < 500:
+                time.sleep(0.1)
+                world_state = agent_host.getWorldState()
+                for error in world_state.errors:
+                    print("Error:", error.text)
+                i += 1
+            working = i < 500
 
         for _ in range(num_zombies):
             agent_host.sendCommand(
