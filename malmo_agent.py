@@ -24,7 +24,13 @@ class MalmoAgent(Agent):
         "turn 0",
         "turn 0",
     ]
-    rewards = {"per_kill": 100, "per_health_lost": -4, "per_step": 0.05, "per_hit": 10}
+    rewards = {
+        "per_kill": 100,
+        "per_health_lost": -4,
+        "per_step": 0.05,
+        "per_hit": 10,
+        "per_death": -100,
+    }
 
     def __init__(
         self,
@@ -95,7 +101,7 @@ class MalmoAgent(Agent):
                 obs["MobsKilled"] - self.temp["total_kills"]
             ) * MalmoAgent.rewards["per_kill"]
             if self.temp["total_kills"] < obs["MobsKilled"]:
-                for _ in range(self.obs["MobsKilled" - self.temp["total_kills"]]):
+                for _ in range(obs["MobsKilled"] - self.temp["total_kills"]):
                     self.agent_host.sendCommand(
                         "chat /summon Zombie "
                         + str(np.random.randint(-10, 11))
@@ -117,6 +123,8 @@ class MalmoAgent(Agent):
             ):
                 reward += MalmoAgent.rewards["per_hit"]
             self.temp["cumulative_reward"] += reward
+            if self.temp["health"] <= 0:
+                reward += MalmoAgent.rewards["per_death"]
             return reward, self.temp["health"] <= 0
         return 0, False
 
