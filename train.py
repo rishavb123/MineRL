@@ -128,7 +128,7 @@ if __name__ == "__main__":
             agent_host.sendCommand(
                 "chat /summon Zombie "
                 + str(np.random.randint(-10, 11))
-                + " 6 "
+                + " 4.5 "
                 + str(np.random.randint(-10, 11))
                 + " {HealF:10.0f}"
             )
