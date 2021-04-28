@@ -14,8 +14,8 @@ with open(metric_file) as json_file:
 fig, axs = plt.subplots(1, 3)
 
 for key, ax in zip(metrics, axs):
-    ax.set_title(key + " vs iterations")
-    ax.set_xlabel("iterations")
+    ax.set_title(key + " vs episodes")
+    ax.set_xlabel("episodes")
     ax.set_ylabel(key)
     ax.plot(metrics[key], label="data")
     ax.plot(savgol_filter(metrics[key], len(metrics[key]) / 2, 4), label="savgol_filter")
