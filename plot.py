@@ -1,8 +1,12 @@
+from rerun import get_last_stamp
 from smoothing import running_average, savgol_filter
+
+import matplotlib
 import matplotlib.pyplot as plt
 import json
 
-metric_file = "./metrics/zombie_fight_2_1619572825.json"
+stamp = get_last_stamp()
+metric_file = f"./metrics/zombie_fight_2_{stamp}.json"
 
 with open(metric_file) as json_file:
     metrics = json.load(json_file)
@@ -18,4 +22,6 @@ for key, ax in zip(metrics, axs):
     ax.plot(running_average(metrics[key]), label="running_average", )
     ax.legend()
 
+fig.set_size_inches(24.5, 13)
+plt.savefig(f"./graphs/zombie_fight_2_{stamp}.png")
 plt.show()
