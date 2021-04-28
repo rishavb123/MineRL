@@ -1,9 +1,10 @@
-import json
+from rerun import get_last_stamp, get_starting_episode
 from model import make_model, make_baseline_model
 from malmo_agent import MalmoAgent
 
 import malmo.MalmoPython as MalmoPython
 from pathlib import Path
+import json
 import sys
 import time
 import numpy as np
@@ -15,7 +16,9 @@ baseline = False
 video_shape = (480, 640, 3)
 input_shape = (84, 112, 3)
 save = True
-load_model = None # "./models/zombie_fight_2_1619471920.h5"
+load_last_trained = True
+load_model = None
+start_episode = 0
 max_steps_per_episode = 1000
 running_average_length = episodes // 20
 num_zombies = 2
@@ -24,17 +27,16 @@ agent_cfg = {
     "gamma": 0.99,
     "batch_size": 64,
     "epsilon": 1,
-    # "epsilon": 0.663377846114,
     "epsilon_decay": 0.998,
     "epsilon_min": 0.05,
     "copy_period": 300,
-    "mem_size": 10000 if baseline else 10000,
+    "mem_size": 10000
 }
 
 
 if __name__ == "__main__":
     # Runtime Generated Constants
-    stamp = int(time.time())
+    stamp = int(time.time()) if not load_last_trained else get_last_stamp()
     env_name = xml_file.split("/")[-1].split(".")[0]
     if baseline:
         env_name += "_baseline"
@@ -89,11 +91,16 @@ if __name__ == "__main__":
         input_shape=input_shape,
         agent_host=agent_host,
     )
-    if load_model:
+    if load_last_trained:
+        agent.load_model()
+        agent.load_data()
+        starting_episode = get_starting_episode()
+        agent.epsilon = agent.epsilon_decay ** (starting_episode - 1)
+    elif load_model:
         agent.load_model(load_model)
 
     # Episode Loop
-    for ep in range(episodes):
+    for ep in range(start_episode - 1, episodes):
 
         # Mission Setup
         first = True
@@ -101,6 +108,7 @@ if __name__ == "__main__":
         while not working:
             if not first:
                 print("Had to restart the mission since the data was not sent to the server!")
+                time.sleep(30)
             first = False
             max_retries = 3
             for retry in range(max_retries):
@@ -148,7 +156,6 @@ if __name__ == "__main__":
             agent_host.sendCommand("attack 1")
             world_state = agent_host.getWorldState()
             time.sleep(0.02)
-            agent_host.sendCommand("attack 1")
 
             if len(world_state.observations) and len(world_state.video_frames):
                 obs = json.loads(world_state.observations[-1].text)
