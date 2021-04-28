@@ -154,21 +154,21 @@ if __name__ == "__main__":
 
         while world_state.is_mission_running and step < max_steps_per_episode:
             agent_host.sendCommand("attack 1")
-            world_state = agent_host.getWorldState()
             time.sleep(0.02)
+            world_state = agent_host.getWorldState()
 
             if len(world_state.observations) and len(world_state.video_frames):
                 obs = json.loads(world_state.observations[-1].text)
                 frame = world_state.video_frames[0]
 
                 next_state = agent.process_frame(frame)
+                reward, done = agent.process_observation(obs)
                 if state is not None:
                     agent.remember(state, action, reward, next_state, done)
                     agent.learn()
-                reward, done = agent.process_observation(obs)
 
                 state = next_state
-                agent.choose_and_take_action(state)
+                action = agent.choose_and_take_action(state)
 
                 step += 1
                 time_elapsed = time.time() - start_time
