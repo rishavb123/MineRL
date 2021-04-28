@@ -13,3 +13,7 @@ def savgol_filter(y, window_size, degree):  # Savitzky-Golay Filter
         y_smooth.append(p(x))
 
     return y_smooth
+
+def running_average(y, length_ratio=0.1):
+    c = int(length_ratio * len(y))
+    return [np.mean(y[i - c // 2: i + c // 2]) for i in range(len(y))]
