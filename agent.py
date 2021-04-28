@@ -78,7 +78,9 @@ class Agent:
         if self.epsilon > self.epsilon_min:
             self.epsilon = self.epsilon * self.epsilon_decay
 
-    def save_model(self):
+    def save_model(self, model_file=None):
+        if model_file == None or model_file == "":
+            model_file = self.model_file
         self.dqn.save_model(self.model_file)
 
     def load_model(self, model_file=None):
@@ -92,3 +94,9 @@ class Agent:
             metric_file = self.metric_file
         with open(metric_file, "w") as out_file:
             json.dump(self.metrics, out_file)
+
+    def load_data(self, metric_file=None):
+        if metric_file == None or metric_file == "":
+            metric_file = self.metric_file
+        with open('data.json') as json_file:
+            self.metrics = json.load(json_file)
