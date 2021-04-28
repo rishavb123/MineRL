@@ -98,5 +98,5 @@ class Agent:
     def load_data(self, metric_file=None):
         if metric_file == None or metric_file == "":
             metric_file = self.metric_file
-        with open('data.json') as json_file:
+        with open(metric_file) as json_file:
             self.metrics = json.load(json_file)

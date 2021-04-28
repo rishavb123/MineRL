@@ -94,8 +94,8 @@ if __name__ == "__main__":
     if load_last_trained:
         agent.load_model()
         agent.load_data()
-        starting_episode = get_starting_episode()
-        agent.epsilon = agent.epsilon_decay ** (starting_episode - 1)
+        start_episode = get_starting_episode(agent)
+        agent.epsilon = agent.epsilon_decay ** (start_episode - 1)
     elif load_model:
         agent.load_model(load_model)
 
