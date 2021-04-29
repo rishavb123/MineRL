@@ -1,4 +1,4 @@
-from rerun import get_last_stamp, get_starting_episode
+from rerun import get_last_stamp, get_stamps, get_starting_episode
 from model import make_model, make_baseline_model
 from malmo_agent import MalmoAgent
 
@@ -12,11 +12,11 @@ import numpy as np
 # Constants
 xml_file = "./envs/zombie_fight.xml"
 episodes = 5000
-baseline = False
+baseline = True
 video_shape = (480, 640, 3)
 input_shape = (84, 112, 3)
 save = True
-load_last_trained = False
+load_last_trained = True
 load_model = None
 start_episode = 1
 max_steps_per_episode = 1000
@@ -27,11 +27,21 @@ agent_cfg = {
     "gamma": 0.85,
     "batch_size": 64,
     "epsilon": 1,
-    "epsilon_decay": 0.998,
+    "epsilon_decay": 0.992,
     "epsilon_min": 0.05,
     "copy_period": 300,
-    "mem_size": 10000
+    "mem_size": 5000
 }
+# agent_cfg = {
+#     "alpha": 0.0005,
+#     "gamma": 0.85,
+#     "batch_size": 64,
+#     "epsilon": 1,
+#     "epsilon_decay": 0.998,
+#     "epsilon_min": 0.05,
+#     "copy_period": 300,
+#     "mem_size": 10000
+# }
 # agent_cfg = {
 #     "alpha": 0.0005,
 #     "gamma": 0.92,
