@@ -24,7 +24,7 @@ running_average_length = episodes // 20
 num_zombies = 2
 agent_cfg = {
     "alpha": 0.0005,
-    "gamma": 0.99,
+    "gamma": 0.92,
     "batch_size": 64,
     "epsilon": 1,
     "epsilon_decay": 0.998,
@@ -153,7 +153,7 @@ if __name__ == "__main__":
         done = False
 
         while world_state.is_mission_running and step < max_steps_per_episode:
-            agent_host.sendCommand("attack 1")
+            # agent_host.sendCommand("attack 1")
             time.sleep(0.02)
             world_state = agent_host.getWorldState()
 
@@ -173,7 +173,7 @@ if __name__ == "__main__":
                 step += 1
                 time_elapsed = time.time() - start_time
                 print(
-                    f"Step {1 + step}; Reward {r(reward)}; Score {r(agent.temp['cumulative_reward'])}; Epsilon {r(agent.epsilon)}; Time Elapsed {int(time_elapsed)}s"
+                    f"Step {1 + step}; Reward {r(reward)}; Score {r(agent.temp['cumulative_reward'])}; Kills {r(agent.temp['kills'])}; Epsilon {r(agent.epsilon)}; Time Elapsed {int(time_elapsed)}s"
                     + " " * 20,
                     end="\r",
                 )
@@ -185,7 +185,7 @@ if __name__ == "__main__":
             ]
         )
         print(
-            f"Episode {ep + 1} of {episodes}; Score {r(agent.metrics['cumulative_rewards'][-1])}; Average Score {r(avg_score)}; Episode Time {int(time_elapsed)}s"
+            f"Episode {ep + 1} of {episodes}; Score {r(agent.metrics['cumulative_rewards'][-1])}; Kills {r(agent.metrics['kills'][-1])}; Average Score {r(avg_score)}; Episode Time {int(time_elapsed)}s"
             + " " * 20
         )
         if save:

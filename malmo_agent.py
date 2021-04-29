@@ -10,8 +10,8 @@ class MalmoAgent(Agent):
         "move 1",
         "move 0",
         "move -1",
-        "strafe 1",
-        "strafe -1",
+        # "strafe 1",
+        # "strafe -1",
         "turn -0.7",
         "turn 0.7",
     ]
@@ -19,16 +19,16 @@ class MalmoAgent(Agent):
         "move 0",
         "move 0",
         "move 0",
-        "strafe 0",
-        "strafe 0",
+        # "strafe 0",
+        # "strafe 0",
         "turn 0",
         "turn 0",
     ]
     rewards = {
-        "per_kill": 100,
+        "per_kill": 150,
         "per_health_lost": -4,
         "per_step": 0.05,
-        "per_hit": 10,
+        "per_hit": 15,
         "per_death": -100,
     }
 
@@ -122,6 +122,7 @@ class MalmoAgent(Agent):
                 and obs["LineOfSight"]["inRange"]
             ):
                 reward += MalmoAgent.rewards["per_hit"]
+                self.agent_host.sendCommand("attack 1")
             self.temp["cumulative_reward"] += reward
             if self.temp["health"] <= 0:
                 reward += MalmoAgent.rewards["per_death"]
