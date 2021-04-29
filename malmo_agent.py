@@ -122,7 +122,6 @@ class MalmoAgent(Agent):
                 and obs["LineOfSight"]["inRange"]
             ):
                 reward += MalmoAgent.rewards["per_hit"]
-                self.agent_host.sendCommand("attack 1")
             self.temp["cumulative_reward"] += reward
             if self.temp["health"] <= 0:
                 reward += MalmoAgent.rewards["per_death"]
