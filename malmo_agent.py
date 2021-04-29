@@ -26,11 +26,18 @@ class MalmoAgent(Agent):
     ]
     rewards = {
         "per_kill": 150,
-        "per_health_lost": -7,
-        "per_step": 0.1,
+        "per_health_lost": -4,
+        "per_step": 0.05,
         "per_hit": 15,
         "per_death": -100,
     }
+    # rewards = {
+    #     "per_kill": 150,
+    #     "per_health_lost": -7,
+    #     "per_step": 0.1,
+    #     "per_hit": 15,
+    #     "per_death": -100,
+    # }
 
     def __init__(
         self,

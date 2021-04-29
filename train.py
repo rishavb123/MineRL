@@ -24,14 +24,24 @@ running_average_length = episodes // 20
 num_zombies = 2
 agent_cfg = {
     "alpha": 0.0005,
-    "gamma": 0.92,
+    "gamma": 0.85,
     "batch_size": 64,
     "epsilon": 1,
     "epsilon_decay": 0.998,
     "epsilon_min": 0.05,
-    "copy_period": 100,
+    "copy_period": 300,
     "mem_size": 10000
 }
+# agent_cfg = {
+#     "alpha": 0.0005,
+#     "gamma": 0.92,
+#     "batch_size": 64,
+#     "epsilon": 1,
+#     "epsilon_decay": 0.998,
+#     "epsilon_min": 0.05,
+#     "copy_period": 100,
+#     "mem_size": 10000
+# }
 
 
 if __name__ == "__main__":
