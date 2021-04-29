@@ -1,11 +1,13 @@
-from rerun import get_last_stamp
+from rerun import get_last_stamp, get_stamps
 from smoothing import running_average, savgol_filter
 
 import matplotlib
 import matplotlib.pyplot as plt
 import json
 
-stamp = get_last_stamp()
+stamps = get_stamps()
+# stamp = get_last_stamp()
+stamp = stamps[1]
 metric_file = f"./metrics/zombie_fight_2_{stamp}.json"
 
 with open(metric_file) as json_file:
