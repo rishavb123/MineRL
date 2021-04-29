@@ -7,8 +7,8 @@ import json
 
 stamps = get_stamps()
 # stamp = get_last_stamp()
-stamp = stamps[1]
-metric_file = f"./metrics/zombie_fight_2_{stamp}.json"
+stamp = stamps[-1]
+metric_file = f"./metrics/zombie_fight_baseline_2_{stamp}.json"
 
 with open(metric_file) as json_file:
     metrics = json.load(json_file)
@@ -26,5 +26,5 @@ for key, ax in zip(metrics, axs):
     ax.legend()
 
 fig.set_size_inches(24.5, 13)
-plt.savefig(f"./graphs/zombie_fight_2_{stamp}.png")
+plt.savefig(f"./graphs/zombie_fight_baseline_2_{stamp}.png")
 plt.show()
