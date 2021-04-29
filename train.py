@@ -29,7 +29,7 @@ agent_cfg = {
     "epsilon": 1,
     "epsilon_decay": 0.998,
     "epsilon_min": 0.05,
-    "copy_period": 300,
+    "copy_period": 100,
     "mem_size": 10000
 }
 
@@ -153,7 +153,7 @@ if __name__ == "__main__":
         done = False
 
         while world_state.is_mission_running and step < max_steps_per_episode:
-            # agent_host.sendCommand("attack 1")
+            agent_host.sendCommand("attack 1")
             time.sleep(0.02)
             world_state = agent_host.getWorldState()
 
