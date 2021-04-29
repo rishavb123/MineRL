@@ -16,6 +16,7 @@ with open(metric_file) as json_file:
 fig, axs = plt.subplots(1, 3)
 
 for key, ax in zip(metrics, axs):
+    metrics[key] = metrics[key][:1000]
     ax.set_title(key + " vs episodes")
     ax.set_xlabel("episodes")
     ax.set_ylabel(key)
