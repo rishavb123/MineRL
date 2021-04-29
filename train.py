@@ -47,6 +47,8 @@ agent_cfg = {
 if __name__ == "__main__":
     # Runtime Generated Constants
     stamp = int(time.time()) if not load_last_trained else get_last_stamp()
+    if load_model is not None:
+        stamp = get_stamps()[load_model]
     env_name = xml_file.split("/")[-1].split(".")[0]
     if baseline:
         env_name += "_baseline"
@@ -101,7 +103,7 @@ if __name__ == "__main__":
         input_shape=input_shape,
         agent_host=agent_host,
     )
-    if load_last_trained:
+    if load_last_trained or load_model is not None:
         agent.load_model()
         agent.load_data()
         start_episode = get_starting_episode(agent)
