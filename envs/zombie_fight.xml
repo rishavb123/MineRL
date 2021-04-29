@@ -30,10 +30,10 @@
             <Placement pitch="10" x="5.5" y="4" yaw="90" z="5.5" />
             <Inventory>
                <InventoryBlock quantity="1" slot="0" type="diamond_sword" />
-               <InventoryBlock quantity="1" slot="39" type="iron_helmet" />
-               <InventoryBlock quantity="1" slot="38" type="iron_chestplate" />
-               <InventoryBlock quantity="1" slot="37" type="iron_leggings" />
-               <InventoryBlock quantity="1" slot="36" type="iron_boots" />
+               <InventoryBlock quantity="1" slot="39" type="diamond_helmet" />
+               <InventoryBlock quantity="1" slot="38" type="diamond_chestplate" />
+               <InventoryBlock quantity="1" slot="37" type="diamond_leggings" />
+               <InventoryBlock quantity="1" slot="36" type="diamond_boots" />
             </Inventory>
 		</AgentStart>
 		<AgentHandlers>
