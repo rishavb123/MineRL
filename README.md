@@ -18,11 +18,17 @@ The agent will have to last as long as possible while defeating as many distinct
 Since we are using Deep Q Learning, we did not have to collect any data. The agent’s observations in the environment was our “data,” on which the neural network trained on. The agents observations in the environment were 640x480, which we rescaled to an 84x84 image.
 ## Definitions
 **Step**: A step is every iteration in an episode. Each step, the agent makes an observation, takes an action, and learns from previous memories.
+
 **Episode**: Each run of the game in which the agent plays (until it dies) is called an episode.
+
 **Reward**: The agent receives a positive reward for being in a good state and taking an optimal action like hitting a zombie. It receives a negative reward for things like getting hit.
+
 **Q-value**: The Q value is essentially a numeric value assigned to a state action pair determining how “good” that action is given the current state.
+
 **DQN**: A neural network that we are using to approximate the Q-value of a state action pair.
+
 **Target Network**: It is a copy of the DQN, but is only updated periodically. This is used to increase the stability of the algorithm.
+
 **ResNet50**: A large image recognition CNN.
 
 ## Methods
