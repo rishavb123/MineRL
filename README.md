@@ -1,6 +1,6 @@
 ## Abstract
 
-We will be using the popular sandbox video game Minecraft and its associated Malmo platform to train an agent to successfully combat in-game entities known as “mobs.” It is our hope that methods like the ones we are using to train an agent in a simulated environment can be extrapolated to real life applications like robotics in the physical world. We will use a popular reinforcement learning technique called Deep Q Learning using a couple different feature representations and compare the differences in performances.
+As robots become more prevalent in society and the workplace, the need for robust algorithms that can learn to control autonomous agents in a wide range of situations becomes paramount. Prior work has shown that deep reinforcement learning models perform reliably in 3D environments, even when rewards are sparse and only visual input is provided to the agent. Here, we use Project Malmö, an AI research platform based on the popular sandbox video game Minecraft, to train an RL agent to combat in-game entities known as “mobs.” We implement a RL algorithm called a Deep Q Network (DQN), as well as a pretrained residual neural network as a baseline model, and compare the differences in performance. We expect that with minimal hyperparameter tuning, the RL model will learn significantly more than the baseline, and that the agent will succeed in defending itself to some extent.
 
 ## Introduction and Background
 
