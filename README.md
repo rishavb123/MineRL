@@ -67,7 +67,7 @@ However, the strategies of the agent were not optimal. The main strategy the age
 
 Overall, the performance of the agent was okay, but it had room for improvement. Unfortunately, we did not get enough time to tune the hyperparameters and reward scheme as much as we had liked, due to limitations in time and compute. Due to the fact that we were training this on a laptop, each train of the agent took around 6-10 hours. So, we were only able to train a few different versions of the model, our best of which ended being version 3. Below is one of the earlier versions of the model, which did not learn very well since the agent was too scared to try anything since the penalty for getting hit was too high.
 
-![alt text](zombie_fight_2_bad.png "Figure 5: Reward, Kills, and Time Survived per Episode for DQN with Poor Hyperparameters")
+![alt text](zombie_fight_bad.png "Figure 5: Reward, Kills, and Time Survived per Episode for DQN with Poor Hyperparameters")
 
 
 
