@@ -6,5 +6,6 @@
             "url": "https://minerl.bhagat.io/"
         }
     ],
-    "ignoreView": true
+    "ignoreView": true,
+    "priority": 10
 }
